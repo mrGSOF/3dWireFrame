@@ -66,7 +66,7 @@ class Window():
                 start_point = self.points[line[0]][:2]
                 end_point = self.points[line[1]][:2]
                 pygame.draw.line(self.screen, self.RED, start_point, end_point, 2)
-            
+
             pygame.display.flip()
             self.clock.tick(60)
         
@@ -106,9 +106,12 @@ class WireFrame():
 if __name__ == "__main__":
     import time
     wireFrame = WireFrame()
-    wireFrame.loadObject(fileName="objects/cube.json")
+    # wireFrame.loadObject(fileName="objects/cube.json")
     wireFrame.loadObject(fileName="objects/pyramid.json")
     wireFrame.rotateObject((45, 45, 45))
-    wireFrame.draw(biases=[100, 0, 0])
+    wireFrame.draw(biases=[200, 0, 0])
+    rotation = 1
     while True:
-        time.sleep(0.1)
+        wireFrame.rotateObject((0, rotation, 0))
+        wireFrame.draw(biases=[200, 0, 0])
+        time.sleep(0.01)
