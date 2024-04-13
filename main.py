@@ -91,7 +91,7 @@ class WireFrame():
             with open(fileName, "r") as f:
                 dict = json.load(f)
 
-        self.objectPoints = np.array(dict["points_xyz"], dtype=np.float64)
+        self.objectPoints = np.array(dict["points_xyz"], dtype=np.float64)*dict["scale"]
         self.objectLines = np.array(dict["lines"], dtype=np.uint16)
 
     def rotateObject(self, angles) -> None:
