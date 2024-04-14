@@ -1,7 +1,6 @@
 import json
 import numpy as np
 import pygame
-import threading
 
 def rotationMatrix(angle_x_deg, angle_y_deg, angle_z_deg):
     angle_x_rad = np.radians(angle_x_deg)
@@ -49,41 +48,38 @@ class Window():
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.RED = (255, 0, 0)
-        self.points = []
         self.lines = []
-        
-        self.run = False
     
-    def start(self):
-        self.run = True
-        while self.run:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.run = False
+    def tick(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
-            self.screen.fill(self.WHITE)
-            for line in self.lines:
-                start_point = self.points[line[0]][:2]
-                end_point = self.points[line[1]][:2]
-                pygame.draw.line(self.screen, self.RED, start_point, end_point, 2)
+        self.screen.fill(self.WHITE)
+        for line in self.lines:
+            start_point = line[0]
+            end_point = line[1]
+            pygame.draw.line(self.screen, self.RED, start_point, end_point, 2)
 
-            pygame.display.flip()
-            self.clock.tick(60)
-        
-        pygame.quit()
+        pygame.display.flip()
+        self.clock.tick(60)
     
-    def loadObject(self, points, lines, bias=0):
-        self.points = points+bias
-        self.lines = lines
+    def loadObject(self, lines):
+        self.lines.extend(lines)
+    
+    def clear(self):
+        self.lines = []
 
-class WireFrame():
-    def __init__(self):
+class Object():
+    def __init__(self, parent):
         self.objectPoints = None
         self.objectLines = None
-        self.win = Window(400, 300)
-        threading.Thread(target=self.win.start).start()
+        self.win = parent
+    
+    def _findCenter(self):
+        return(np.mean(self.objectPoints, axis=0))
 
-    def loadObject(self, fileName=None, dict=None) -> None:
+    def loadObject(self, fileName=None, dict=None) -> object:
         if fileName == None and dict == None:
             raise Exception("Missing kwargs, fileName or dict")
         
@@ -93,25 +89,74 @@ class WireFrame():
 
         self.objectPoints = np.array(dict["points_xyz"], dtype=np.float64)*dict["scale"]
         self.objectLines = np.array(dict["lines"], dtype=np.uint16)
+        
+        return(self)
 
-    def rotateObject(self, angles) -> None:
+    def rotateObject(self, angles, center=(0,0,0)) -> object:
+        if type(self.objectLines) == type(None):
+            raise Exception("Object not loaded")
+        
+        if type(center) == tuple:
+            offset = center
+        
+        elif type(center) == str:
+            if center == "object":
+                offset = self._findCenter()
+        
+        objectCenter = self.objectPoints-offset
+        
+        self.objectPoints = np.dot(objectCenter, rotationMatrix(*angles))+offset
+        
+        return(self)
+
+    def translate(self, biases) -> object:
         if type(self.objectLines) == type(None):
             raise Exception("Object not loaded")
 
-        self.objectPoints = np.dot(self.objectPoints, rotationMatrix(*angles))
+        self.objectPoints = self.objectPoints + biases
+        
+        return(self)
     
-    def draw(self, biases=0) -> None:
-        self.win.loadObject(self.objectPoints.astype(np.int32), self.objectLines, biases)
+    def draw(self) -> object:
+        points = self.objectPoints.astype(np.int32)[:,:2]
+        lines = points[self.objectLines]
+        self.win.loadObject(lines)
+        return(self)
+    
+    def clear(self) -> object:
+        self.win.clear()
+        return(self)
+
+class Container(Object):
+    def __init__(self):
+        self.objects = []
+
+    def addObjects(self, objects) -> object:
+        self.objects.extend(objects)
+        return(self)
+
+    def apply(self, method_name, *args, **kwargs):
+        for obj in self.objects:
+            method = getattr(obj, method_name)
+            method(*args, **kwargs)
+        return self
 
 if __name__ == "__main__":
     import time
-    wireFrame = WireFrame()
-    # wireFrame.loadObject(fileName="objects/cube.json")
-    wireFrame.loadObject(fileName="objects/pyramid.json")
-    wireFrame.rotateObject((45, 45, 45))
-    wireFrame.draw(biases=[200, 0, 0])
+    win = Window(400, 300)
+    box = Container()
+    cube = Object(win)
+    cube.loadObject(fileName="objects/cube.json").translate((0, 50, 0))
+    pyramid = Object(win)
+    pyramid.loadObject(fileName="objects/pyramid.json").translate((0, 150, 0))
+    box.addObjects([cube, pyramid])
+    box.apply("translate", (200, 0, 0))
     rotation = 1
     while True:
-        wireFrame.rotateObject((0, rotation, 0))
-        wireFrame.draw(biases=[200, 0, 0])
+        # pyramid.rotateObject((0, rotation, 0), center="object")
+        box.apply("rotateObject", (0, 1, 0), center="object")
+
+        box.apply("clear")
+        box.apply("draw")
         time.sleep(0.01)
+        win.tick()
