@@ -23,7 +23,8 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=COLOR):
     
 if __name__ == "__main__":
     import json
-    objName = "./objects/cube.json"
+    #objName = "./objects/cube.json"
+    objName = "./objects/pyramid.json"
     obj = None
     with open(objName) as f:
         obj = json.load(f)
