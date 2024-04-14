@@ -1,7 +1,7 @@
-import MatLib
+import MathLib
 
 class State_base():
-    def __init__(self):
+    def __init__(self, state):
         return
 
 def scale(points, scale) -> list:
@@ -29,7 +29,7 @@ def getLines(self) -> list:
 
 class 3D_object_base() -> 3D_object_base:
     def __init__(self, obj):
-        return
+        self.initState = State_base(obj)
 
     def scale(self, scale, state=False) -> 3D_object_base:
         return self
@@ -39,4 +39,3 @@ class 3D_object_base() -> 3D_object_base:
 
     def translate(self, x, y, z, state=False) -> 3D_object_base:
         return self
-
