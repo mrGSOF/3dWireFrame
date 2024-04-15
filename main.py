@@ -1,5 +1,6 @@
 import pygame
 from Lib3D import Object_WireFrame as OWF
+from Lib3D import Object_base as OB
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 400
@@ -25,8 +26,12 @@ if __name__ == "__main__":
     import json
     #objName = "./objects/cube.json"
     #objName = "./objects/pyramid.json"
-    objName = "./objects/house.json"
-    obj = OWF.Object_wireFrame(filename=objName).translate(V=(0,0,0), initShape=True)
+    #objName = "./objects/house.json"
+    #obj = OWF.Object_wireFrame(filename=objName).translate(V=(0,0,0), initShape=True)
+    obj = OB.Object_container(objList = (
+        OWF.Object_wireFrame(filename="./objects/cube.json").translate(V=(0,0,0), initShape=True),
+        OWF.Object_wireFrame(filename="./objects/pyramid.json").translate(V=(0,-200,0), initShape=True),
+        ))
 
     pygame.init()
     clock = pygame.time.Clock()
@@ -39,7 +44,6 @@ if __name__ == "__main__":
               run = False
 
         clearScreen(screen, COLOR)
-        #lines = [[(50,50),(100,100)],[(50,50),(50,200)]]
         obj.rotate(x=0.02,y=0.01,z=0, initShape=True)
         obj.translate(x=200,y=200,z=200, initShape=False)
         drawWireFrame(screen, obj.getLines(), (0,0,0))

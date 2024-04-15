@@ -63,24 +63,27 @@ class Object_container(Object_base):
         self.shapes = objList
 
     def scale(self, scale, initShape=False):
-        for shape in shapes:
+        for shape in self.shapes:
             shape.scale(scale, initShape)
         return self
 
     def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False):
-        for shape in shapes:
+        for shape in self.shapes:
             shape.rotate(x, y, z, dcm, initShape)
         return self
 
     def translate(self, x=0, y=0, z=0, V=None, initShape=False):
-        for shape in shapes:
-            shape.translate(x, y, z, dcm, initShape)
+        for shape in self.shapes:
+            shape.translate(x, y, z, V, initShape)
         return self
 
     def getShape(self):
         return []
 
     def getLines(self):
-        return []
+        lines = []
+        for shape in self.shapes:
+            lines += shape.getLines()
+        return lines
 
     
