@@ -2,8 +2,8 @@ import pygame
 from Lib3D import Object_WireFrame as OWF
 from Lib3D import Object_base as OB
 
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 COLOR = (255,255,255)
 
 def drawWireFrame(screen, lines, color) -> None:
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
         clearScreen(screen, COLOR)
         world.rotate(x=0.02,y=0.01,z=0, initShape=True)
-        world.translate(x=200,y=200,z=200, initShape=False)
+        world.translate(x=400,y=400,z=400, initShape=False)
         drawWireFrame(screen, world.getLines(), (0,0,0))
         pygame.display.flip()
         clock.tick(30)
