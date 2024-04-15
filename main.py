@@ -27,12 +27,18 @@ if __name__ == "__main__":
     #objName = "./objects/cube.json"
     #objName = "./objects/pyramid.json"
     #objName = "./objects/house.json"
-    #obj = OWF.Object_wireFrame(filename=objName).translate(V=(0,0,0), initShape=True)
-    obj = OB.Object_container(objList = (
-        OWF.Object_wireFrame(filename="./objects/cube.json").translate(V=(0,0,0), initShape=True),
-        OWF.Object_wireFrame(filename="./objects/pyramid.json").translate(V=(0,-200,0), initShape=True),
+    obj1 = OWF.Object_wireFrame(filename="./objects/house.json").scale(0.5, initShape=True)
+    obj2 = OB.Object_container(objList = (
+        OWF.Object_wireFrame(filename="./objects/cube.json").translate(V=(0,0,0), initShape=True),       #< Body
+        OWF.Object_wireFrame(filename="./objects/pyramid.json").translate(V=(0,-200,0), initShape=True), #< Roof
+        OWF.Object_wireFrame(filename="./objects/frame.json").translate(V=(0,0,-100), initShape=True),   #< Window
         ))
 
+    world = OB.Object_container(objList = (
+        obj1.translate(V=(0,0,0), initShape=True),
+        obj2.translate(V=(0,-200,0), initShape=True),
+        ))
+    
     pygame.init()
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, COLOR)
@@ -44,9 +50,9 @@ if __name__ == "__main__":
               run = False
 
         clearScreen(screen, COLOR)
-        obj.rotate(x=0.02,y=0.01,z=0, initShape=True)
-        obj.translate(x=200,y=200,z=200, initShape=False)
-        drawWireFrame(screen, obj.getLines(), (0,0,0))
+        world.rotate(x=0.02,y=0.01,z=0, initShape=True)
+        world.translate(x=200,y=200,z=200, initShape=False)
+        drawWireFrame(screen, world.getLines(), (0,0,0))
         pygame.display.flip()
         clock.tick(30)
 
