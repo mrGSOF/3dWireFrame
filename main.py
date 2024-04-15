@@ -26,7 +26,7 @@ if __name__ == "__main__":
     #objName = "./objects/cube.json"
     #objName = "./objects/pyramid.json"
     objName = "./objects/house.json"
-    obj = OWF.Object_wireFrame(filename=objName).translate(V=(0,0,0), state=True)
+    obj = OWF.Object_wireFrame(filename=objName).translate(V=(0,0,0), initShape=True)
 
     pygame.init()
     clock = pygame.time.Clock()
@@ -40,10 +40,9 @@ if __name__ == "__main__":
 
         clearScreen(screen, COLOR)
         #lines = [[(50,50),(100,100)],[(50,50),(50,200)]]
-        obj.rotate(x=0.02,y=0.01,z=0, state=True)
-        obj.translate(x=200,y=200,z=200, state=False)
-        lines = obj.getLines()
-        drawWireFrame(screen, lines, (0,0,0))
+        obj.rotate(x=0.02,y=0.01,z=0, initShape=True)
+        obj.translate(x=200,y=200,z=200, initShape=False)
+        drawWireFrame(screen, obj.getLines(), (0,0,0))
         pygame.display.flip()
         clock.tick(30)
 
