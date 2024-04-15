@@ -9,10 +9,11 @@ __email__ = "gsoffer@yahoo.com"
 __status__ = "Development"
 
 import math, copy
+pi = math.pi
 
 def radToDeg(rad) -> float:
     """ Convert radians to degrees """
-    return 180*rad/math.pi # or use this math.degrees(rad)
+    return 180*rad/pi # or use this math.degrees(rad)
 
 def modulu(val, modulu):
     """ Returns the modulus of val%modulu """
@@ -67,8 +68,8 @@ def polar_V2(V) -> float:
     return [absV(V), angleV(V)]
 
 def rotation_V2(rad, V) -> list:
-    #sinX = np.sin(rad)
-    #cosX = np.cos(rad)
+    #sinX = math.sin(rad)
+    #cosX = math.cos(rad)
     #DCM = ((cosX, -sinX), (sinX, cosX))
     return mul_M2x2(DCM_2D(rad), V)
     
@@ -79,23 +80,23 @@ def absV_V3(V) -> float:
 def angle_V3(v) -> list:
     r = absV3(v)
     _absV2 = absV2( v[0:2] )
-    elevation = np.pi / 2.0                          #< For case 0 and 1
+    elevation = pi / 2.0                          #< For case 0 and 1
     #elevation = 0.0                                  #< For case2
     if _absV2 > 0.001:
-        elevation = np.arctan( v[2] / _absV2 )  #< Case1 - https://keisan.casio.com/exec/system/1359533867 (Passed targeting test)
-        #elevation = -np.arctan2( _absV2, v[2]) +np.pi/2  #< Case2 - https://keisan.casio.com/exec/system/1359533867
-        #elevation = np.arcsin( r / v[2])               #< Case3 - https://www.mechamath.com/trigonometry/cartesian-to-spherical-coordinates-formulas-and-examples/
-    azimuth = np.arctan2(v[1], v[0])
+        elevation = math.arctan( v[2] / _absV2 )  #< Case1 - https://keisan.casio.com/exec/system/1359533867 (Passed targeting test)
+        #elevation = -math.arctan2( _absV2, v[2]) +pi/2  #< Case2 - https://keisan.casio.com/exec/system/1359533867
+        #elevation = math.arcsin( r / v[2])               #< Case3 - https://www.mechamath.com/trigonometry/cartesian-to-spherical-coordinates-formulas-and-examples/
+    azimuth = math.arctan2(v[1], v[0])
     return azimuth, elevation, r
 
 def cartesianToPolar_V3(pos):
     return angleV3(pos)
 
 def polarToCartesian_V3(azimuth, elevation, distance):
-    abs_xy = distance * np.cos(elevation)
-    x = abs_xy * np.cos(azimuth)
-    y = abs_xy * np.sin(azimuth)
-    z = distance * np.sin(elevation)
+    abs_xy = distance * math.cos(elevation)
+    x = abs_xy * math.cos(azimuth)
+    y = abs_xy * math.sin(azimuth)
+    z = distance * math.sin(elevation)
     return x, y, z
 
 def DCM_V2(rad) -> list:
@@ -111,13 +112,13 @@ def DCM_ZYX(a, b, c) -> list:
 #    b = aroundY
 #    c = aroundX
     
-    ca = np.cos(a)
-    cb = np.cos(b)
-    cc = np.cos(c)
+    ca = math.cos(a)
+    cb = math.cos(b)
+    cc = math.cos(c)
     
-    sa = np.sin(a)
-    sb = np.sin(b)
-    sc = np.sin(c)
+    sa = math.sin(a)
+    sb = math.sin(b)
+    sc = math.sin(c)
     DCM = [ [ca*cb, ca*sb*sc-sa*cc, ca*sb*cc+sa*sc],
             [sa*cb, sa*sb*sc+ca*cc, sa*sb*cc-ca*sc],
             [ -sb,       cb*sc,          cb*cc    ]]
@@ -129,13 +130,13 @@ def DCM_XYZ(a, b, c) -> list:
 #    b = aroundY
 #    c = aroundX
     
-    ca = np.cos(a)
-    cb = np.cos(b)
-    cc = np.cos(c)
+    ca = math.cos(a)
+    cb = math.cos(b)
+    cc = math.cos(c)
     
-    sa = np.sin(a)
-    sb = np.sin(b)
-    sc = np.sin(c)
+    sa = math.sin(a)
+    sb = math.sin(b)
+    sc = math.sin(c)
     DCM = [ [    cb*cc,           -cb*sc,        sb  ],
             [ca*sc+sa*sb*cc,  ca*cc-sa*sb*sc,  -sa*cb],
             [sa*sc-ca*sb*cc,  sa*cc+ca*sb*sc,   ca*cb]]
