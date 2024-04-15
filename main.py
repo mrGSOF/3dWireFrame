@@ -1,5 +1,5 @@
 import pygame
-from Lib3D import Object_WireFrame
+from Lib3D import Object_WireFrame as OWF
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 400
@@ -7,9 +7,9 @@ COLOR = (255,255,255)
 
 def drawWireFrame(screen, lines, color) -> None:
     for line in lines:
-        p0 = line[0]
-        p1 = line[1]
-        pygame.draw.line( screen, color, p0, p1 )
+        x0, y0, z0 = line[0] #< P0
+        x1, y1, z1 = line[1] #< P1
+        pygame.draw.line( screen, color, (x0, y0), (x1, y1) ) #< Line from P0 to P1
 
 def clearScreen(screen, color=(255,255,255)) -> None:
   screen.fill(color)
@@ -24,24 +24,27 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=COLOR):
 if __name__ == "__main__":
     import json
     #objName = "./objects/cube.json"
-    objName = "./objects/pyramid.json"
-    obj = None
-    with open(objName) as f:
-        obj = json.load(f)
+    #objName = "./objects/pyramid.json"
+    objName = "./objects/house.json"
+    obj = OWF.Object_wireFrame(filename=objName).translate(V=(0,0,0), state=True)
 
     pygame.init()
+    clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, COLOR)
 
     run = True
     while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+              run = False
 
-      #pygame.draw.rect(screen, (255, 0, 0), (200, 100, 150, 150))
-      drawWireFrame(screen, [[(50,50),(100,100)],[(50,50),(50,200)]], (0,0,0))
-      #drawObject(screen, obj)
-      for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-          run = False
-
-      pygame.display.flip()
+        clearScreen(screen, COLOR)
+        #lines = [[(50,50),(100,100)],[(50,50),(50,200)]]
+        obj.rotate(x=0.02,y=0.01,z=0, state=True)
+        obj.translate(x=200,y=200,z=200, state=False)
+        lines = obj.getLines()
+        drawWireFrame(screen, lines, (0,0,0))
+        pygame.display.flip()
+        clock.tick(30)
 
     pygame.quit()

@@ -1,35 +1,38 @@
-import MathLib
-
-class State_base():
-    def __init__(self, state):
-        return
+from MathLib import MathLib as ML
 
 def scale(points, scale) -> list:
-    return MathLib.MxV(points, [scale]*3)
-#    scaled = []
-#    for point in points:
-#        scaled.append(MathLib.scale_V3(point, scale))
-#    return scaled
+    newPoints = [None]*len(points)
+    for i,point in enumerate(points):
+        newPoints[i] = ML.scale_V3(point, scale)
+    return newPoints
 
-def rotate(self, points, x=0, y=0, z=0, dcm=None, state=False) -> list:
+def rotate(points, x=0, y=0, z=0, dcm=None, state=False) -> list:
+    newPoints = [None]*len(points)
     if dcm == None:
-        dcm = MathLib.DCM_XYZ(x, y, z)
+        dcm = ML.DCM_XYZ(x, y, z)
 
-    for i, point in enumerate[points]:
-        points[i] = MathLib.MxV(dcm, point)
-    return points
+    for i, point in enumerate(points):
+        newPoints[i] = ML.MxV(dcm, point)
+    return newPoints
 
-def translate(self, points, x, y, z, state=False) -> list:
-    for i, point in enumerate[points]:
-        points[i] = MathLib.addV(point, (x,y,z))
-    return points
+def translate(points, x=0, y=0, z=0, V=None, state=False) -> list:
+    newPoints = [None]*len(points)
+    if V == None:
+        V = (x, y, z)
+
+    for i, point in enumerate(points):
+        newPoints[i] = ML.addV(point, V)
+    return newPoints
 
 def getLines(self) -> list:
     return []
 
 class Object_base():
-    def __init__(self, obj):
-        self.initState = State_base(obj)
+    def __init__(self, obj=None, filename=None):
+        return
+
+    def loadJson(self, filename):
+        return self
 
     def scale(self, scale, state=False):
         return self
@@ -39,3 +42,6 @@ class Object_base():
 
     def translate(self, x, y, z, state=False):
         return self
+
+    def getLines(self):
+        return []
