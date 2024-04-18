@@ -56,23 +56,36 @@ class Object_wireFrame(O.Object_base):
             obj = json.load(f)
         return obj
 
-    def scale(self, scale, initShape=False):
+##    def _opPoints(self, func, elements=[]) -> list:
+##        if elements == []:
+##            points = func(self.initShape)
+##        else:
+##            N = len(self.initShape)
+##            points = [0]*N
+##            for i, point in enumerate(self.initShape):
+##                if i in elements:
+##                    points[i] += func([point])
+##                else:
+##                    points[i] += point
+##        return points
+
+    def scale(self, scale, initShape=False, elements=[]):
         shape = _scale(self.initShape, scale)
         self._updateShape( shape, initShape )
         return self
         
-    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False):
+    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[]):
         shape = _rotate( self.initShape, x,y,z, dcm )
         self._updateShape( shape, initShape )
         return self
 
-    def translate(self, x=0, y=0, z=0, V=None, initShape=False):
+    def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[]):
         shape = _translate( self.initShape, x,y,z, V )
         self._updateShape( shape, initShape )
         return self
 
     def getShape(self) -> list:
-        return self.getShape()
+        return self.shape
 
     def getLines(self) -> list:
         return _calcLines(self.shape, self.connections)
