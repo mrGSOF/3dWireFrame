@@ -30,9 +30,10 @@ if __name__ == "__main__":
     obj1 = OWF.Object_wireFrame(filename="./objects/house.json").scale(0.5, initShape=True)
     obj2 = OB.Object_container(objList = (
         OWF.Object_wireFrame(filename="./objects/cube.json").translate(V=(0,0,0), initShape=True),       #< Body
-        OWF.Object_wireFrame(filename="./objects/pyramid.json").translate(V=(0,-200,0), initShape=True), #< Roof
+        OWF.Object_wireFrame(filename="./objects/pyramid.json").translate(V=(0,-250,0), initShape=True), #< Roof
         OWF.Object_wireFrame(filename="./objects/frame.json").translate(V=(0,0,-100), initShape=True),   #< Window
-        ))
+        ),
+                               connections=[[[0,0],[1,0]],[[0,1],[1,1]],[[0,2],[1,2]],[[0,3],[1,3]]])
 
     world = OB.Object_container(objList = (
         obj1.translate(V=(0,0,0), initShape=True),
