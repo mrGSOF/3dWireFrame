@@ -27,6 +27,11 @@ class Object_container(Object_base):
         self.shapes = objList
         self.connections = connections
 
+    def reset(self):
+        for shape in self.shapes:
+            shape.reset()
+        return self
+
     def scale(self, scale, initShape=False, elements=[]):
         if elements == []:
             for shape in self.shapes:
