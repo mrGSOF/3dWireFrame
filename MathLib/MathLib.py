@@ -108,10 +108,6 @@ def DCM_V2(rad) -> list:
 ### https://en.wikipedia.org/wiki/Rotation_matrix
 def DCM_ZYX(a, b, c) -> list:
     """ a is around Z, b is around Y, and c is around X"""
-#    a = aroundZ
-#    b = aroundY
-#    c = aroundX
-    
     ca = math.cos(a)
     cb = math.cos(b)
     cc = math.cos(c)
@@ -126,10 +122,6 @@ def DCM_ZYX(a, b, c) -> list:
 
 def DCM_XYZ(a, b, c) -> list:
     """ a is around X, b is around Y, and c is around Z"""
-#    a = aroundZ
-#    b = aroundY
-#    c = aroundX
-    
     ca = math.cos(a)
     cb = math.cos(b)
     cc = math.cos(c)

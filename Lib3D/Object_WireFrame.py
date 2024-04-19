@@ -8,16 +8,19 @@ def _scale(points, scale) -> list:
         newPoints[i] = ML.scale_V3(point, scale)
     return newPoints
 
-def _rotate(points, x=0, y=0, z=0, dcm=None, state=False) -> list:
+def _rotate(points, x=0, y=0, z=0, dcm=None) -> list:
     newPoints = [None]*len(points)
     if dcm == None:
-        dcm = ML.DCM_XYZ(x, y, z)
+        #dcm = ML.DCM_XYZ(x, y, z)
+        dcm = ML.DCM_ZYX(z, y, x)
 
     for i, point in enumerate(points):
         newPoints[i] = ML.MxV(dcm, point)
+        #np = ML.MxV(dcm, [point[0], point[2], point[1]])
+        #newPoints[i] = [np[0],np[2],np[1]] 
     return newPoints
 
-def _translate(points, x=0, y=0, z=0, V=None, state=False) -> list:
+def _translate(points, x=0, y=0, z=0, V=None) -> list:
     newPoints = [None]*len(points)
     if V == None:
         V = (x, y, z)
@@ -27,13 +30,13 @@ def _translate(points, x=0, y=0, z=0, V=None, state=False) -> list:
     return newPoints
 
 def _calcLines(points, connections) -> list:
-    shape = [0]*len(connections)
+    lines = [0]*len(connections)
     for i, connect in enumerate(connections):
         fromPnt, toPnt = connect
         p0 = points[fromPnt]
         p1 = points[toPnt]
-        shape[i] = (p0,p1)
-    return shape
+        lines[i] = (p0,p1)
+    return lines
 
 class Object_wireFrame(O.Object_base):
     def __init__(self, obj=None, filename=None, color=(0,0,0)):
@@ -43,12 +46,11 @@ class Object_wireFrame(O.Object_base):
         self.color  = color
         self.initShape   = obj["points_xyz"]
         self.connections = obj["connections"]
-        self.scale(obj["scale"], initShape=True)
+        self.reset().scale(obj["scale"], initShape=True)
 
-    def _updateShape(self, shape, initShape=False):
+    def _updateShape(self, initShape=False):
         if initShape == True:
-            self.initShape = shape
-        self.shape = shape
+            self.initShape = self.shape
 
     def _loadJson(self, filename):
         obj = None
@@ -56,32 +58,23 @@ class Object_wireFrame(O.Object_base):
             obj = json.load(f)
         return obj
 
-##    def _opPoints(self, func, elements=[]) -> list:
-##        if elements == []:
-##            points = func(self.initShape)
-##        else:
-##            N = len(self.initShape)
-##            points = [0]*N
-##            for i, point in enumerate(self.initShape):
-##                if i in elements:
-##                    points[i] += func([point])
-##                else:
-##                    points[i] += point
-##        return points
+    def reset(self):
+        self.shape = self.initShape
+        return self
 
     def scale(self, scale, initShape=False, elements=[]):
-        shape = _scale(self.initShape, scale)
-        self._updateShape( shape, initShape )
+        self.shape = _scale(self.shape, scale)
+        self._updateShape( initShape )
         return self
         
     def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[]):
-        shape = _rotate( self.initShape, x,y,z, dcm )
-        self._updateShape( shape, initShape )
+        self.shape = _rotate( self.shape, x,y,z, dcm )
+        self._updateShape( initShape )
         return self
 
     def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[]):
-        shape = _translate( self.initShape, x,y,z, V )
-        self._updateShape( shape, initShape )
+        self.shape = _translate( self.shape, x,y,z, V )
+        self._updateShape( initShape )
         return self
 
     def getShape(self) -> list:
