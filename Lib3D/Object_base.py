@@ -1,4 +1,5 @@
 from MathLib import MathLib as ML
+from Lib3D import Lib3D as L
 
 class Object_base():
     def __init__(self, obj=None, filename=None):
@@ -25,6 +26,7 @@ class Object_base():
 class Object_container(Object_base):
     def __init__(self, objList=[], connections=[]):
         self.shapes = objList
+        self.origin = [0,0,0]
         self.connections = connections
 
     def reset(self):
@@ -54,6 +56,9 @@ class Object_container(Object_base):
         if elements == []:
             for shape in self.shapes:
                 shape.translate(x, y, z, V, initShape)
+#            if V == None:
+#                V = [x,y,z]
+#            self.origin = V
         else:
             for elm in elements:
                 self.shapes[elm].translate(x, y, z, dcm, initShape)                
@@ -69,12 +74,16 @@ class Object_container(Object_base):
         lines = []
         for shape in self.shapes:
             lines += shape.getLines()
+#            shapeLines = shape.getLines()
+#            for line in shapeLines:
+#                line[0] = line[0]
+#            lines += ofsLines
 
         for line in self.connections:
             p0, p1 = line
             shapes0 = self.shapes[p0[0]].getShape()
             shapes1 = self.shapes[p1[0]].getShape()
-            lines += [(shapes0[p0[1]], shapes1[p1[1]])]
+            lines += [L.Line(shapes0[p0[1]], shapes1[p1[1]])]
         return lines
 
     
