@@ -41,10 +41,10 @@ if __name__ == "__main__":
 
     world = OB.Object_container(objList = (
         obj1.translate(V=(0,0,0), initShape=True),
-        obj2.translate(V=(0,-200,0), initShape=True),
+        obj2.translate(V=(0,-100,0), initShape=True),
         #obj3.translate(V=(0,0,0), initShape=True),
         ))
-    
+    print(obj2.origin)
     pygame.init()
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         roof = obj2.shapes[1]
         roof.rotate(x=0,y=roofAng_r,z=0, initShape=False)
         window = obj2.shapes[2]
-        window.translate(V=(0,200,0)).rotate(x=0,y=0,z=10*t).translate(V=(0,-200,0))
+        window.translate(V=(0,0,0)).rotate(x=0,y=0,z=10*t).translate(V=(0,0,0))
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
         world.translate(x=400,y=400,z=400, initShape=False)
         drawWireFrame(screen, world, BLACK)

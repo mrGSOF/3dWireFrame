@@ -44,10 +44,10 @@ class Line():
         self.color = color
 
     def scale(self, scale):
-        self.p1, self.p2 = _scale([self.p1, self.p2], scale)
+        self.p0, self.p1 = _scale([self.p0, self.p1], scale)
 
     def translate(self, x=0, y=0, z=0, V=None):
-        self.p1, self.p2 = _translate([self.p1, self.p2], x,y,z,V)
+        self.p0, self.p1 = _translate([self.p0, self.p1], x,y,z,V)
     
     def rotate(self, x=0, y=0, z=0, dcm=None):
-        self.p1, self.p2 = _rotate([self.p1, self.p2], x,y,z,dcm)
+        self.p0, self.p1 = _rotate([self.p0, self.p1], x,y,z,dcm)
