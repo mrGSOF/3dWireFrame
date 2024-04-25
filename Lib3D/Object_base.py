@@ -26,10 +26,12 @@ class Object_base():
 class Object_container(Object_base):
     def __init__(self, objList=[], connections=[]):
         self.shapes = objList
+        self.initOrigin = [0,0,0]
         self.origin = [0,0,0]
         self.connections = connections
 
     def reset(self):
+        self.origin = self.initOrigin
         for shape in self.shapes:
             shape.reset()
         return self
@@ -46,19 +48,21 @@ class Object_container(Object_base):
     def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[]):
         if elements == []:
             for shape in self.shapes:
+                shape.translate(V=self.origin)
                 shape.rotate(x, y, z, dcm, initShape)
         else:
             for elm in elements:
+                self.shapes[elm].translate(V=self.origin)
                 self.shapes[elm].rotate(x, y, z, dcm, initShape)                
         return self
 
     def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[]):
         if elements == []:
-            for shape in self.shapes:
-                shape.translate(x, y, z, V, initShape)
-#            if V == None:
-#                V = [x,y,z]
-#            self.origin = V
+            if initShape == True:
+                self.initOrigin = (L._translate([self.initOrigin], x,y,z,V))[0]
+                self.origin = self.initOrigin
+            else:
+                self.origin = (L._translate([self.origin], x,y,z,V))[0]
         else:
             for elm in elements:
                 self.shapes[elm].translate(x, y, z, dcm, initShape)                
@@ -73,11 +77,8 @@ class Object_container(Object_base):
     def getLines(self):
         lines = []
         for shape in self.shapes:
+            shape.translate(V=self.origin)
             lines += shape.getLines()
-#            shapeLines = shape.getLines()
-#            for line in shapeLines:
-#                line[0] = line[0]
-#            lines += ofsLines
 
         for line in self.connections:
             p0, p1 = line
