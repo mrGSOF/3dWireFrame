@@ -10,8 +10,8 @@ PI = math.pi
 
 def drawWireFrame(screen, obj, color) -> None:
     for line in obj.getLines():
-        x0, y0, z0 = line[0] #< P0
-        x1, y1, z1 = line[1] #< P1
+        x0, y0, z0 = line.p0
+        x1, y1, z1 = line.p1
         pygame.draw.line( screen, color, (x0, y0), (x1, y1) ) #< Line from P0 to P1
 
 def clearScreen(screen, color=(255,255,255)) -> None:
@@ -37,9 +37,12 @@ if __name__ == "__main__":
         ),
                                connections=[[[0,4],[1,0]],[[0,5],[1,1]],[[0,6],[1,2]],[[0,7],[1,3]]])
 
+    obj3 = OWF.Object_wireFrame(filename="./objects/frame.json").translate(V=(0,0,0), initShape=True)
+
     world = OB.Object_container(objList = (
         obj1.translate(V=(0,0,0), initShape=True),
         obj2.translate(V=(0,-200,0), initShape=True),
+        #obj3.translate(V=(0,0,0), initShape=True),
         ))
     
     pygame.init()
@@ -65,7 +68,7 @@ if __name__ == "__main__":
         roof = obj2.shapes[1]
         roof.rotate(x=0,y=roofAng_r,z=0, initShape=False)
         window = obj2.shapes[2]
-        #window.translate(V=(0,0,0)).rotate(x=t,y=0,z=0).translate(V=(0,0,0))
+        window.translate(V=(0,200,0)).rotate(x=0,y=0,z=10*t).translate(V=(0,-200,0))
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
         world.translate(x=400,y=400,z=400, initShape=False)
         drawWireFrame(screen, world, BLACK)
