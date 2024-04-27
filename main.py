@@ -30,6 +30,9 @@ if __name__ == "__main__":
     #objName = "./objects/pyramid.json"
     #objName = "./objects/house.json"
     obj1 = OWF.Object_wireFrame(filename="./objects/house.json").scale(0.5, initShape=True)
+    net1 = OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True)
+    net2 = OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True).rotate(-PI/2,0,0)
+    net3 = OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True).rotate(0,PI/2,0)
     obj2 = OB.Object_container(objList = (
         OWF.Object_wireFrame(filename="./objects/cube.json").translate(V=(0,0,0), initShape=True),       #< Body
         OWF.Object_wireFrame(filename="./objects/pyramid.json").translate(V=(0,-250,0), initShape=True), #< Roof
@@ -40,9 +43,17 @@ if __name__ == "__main__":
     obj3 = OWF.Object_wireFrame(filename="./objects/frame.json").translate(V=(0,0,0), initShape=True)
 
     world = OB.Object_container(objList = (
-        obj1.translate(V=(0,0,0), initShape=True),
-        obj2.translate(V=(0,-100,0), initShape=True),
-        #obj3.translate(V=(0,0,0), initShape=True),
+        # obj1.translate(V=(0,0,0), initShape=True),
+        # obj2.translate(V=(0,-100,0), initShape=True),
+        # obj3.translate(V=(0,0,0), initShape=True),
+        net1.translate(V=(0,-100,0), initShape=True),
+        net2.translate(V=(0,-100,0), initShape=True),
+        net3.translate(V=(0,-100,0), initShape=True),
+        ))
+
+    world = OB.Object_container(objList = (
+        OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True),
+        OWF.Object_wireFrame(filename="./objects/plane.stl").translate(V=(0, 0, 200)).scale(0.3, initShape=True),
         ))
     print(obj2.origin)
     pygame.init()
