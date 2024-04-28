@@ -21,4 +21,4 @@ def createNet(N, M, dN, dM) -> dict:
 if __name__ == "__main__":
     import json
     with open("objects/net.json", "w") as f:
-        json.dump(createNet(5,5,1,1), f)
+        json.dump(createNet(20,20,1,1), f)
