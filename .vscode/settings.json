@@ -3,5 +3,8 @@
     "python.analysis.diagnosticSeverityOverrides": {
         "reportMissingModuleSource": "none",
         "reportShadowedImports": "none"
-    }
+    },
+    "cSpell.words": [
+        "pymeshlab"
+    ]
 }
