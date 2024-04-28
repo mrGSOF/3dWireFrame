@@ -28,7 +28,7 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
 if __name__ == "__main__":
     net = OWF.Object_wireFrame(obj=Objects.net(25,20)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
     sphere = OWF.Object_wireFrame(obj=Objects.sphere(500, 25)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
-    plane = OWF.Object_wireFrame(filename="./objects/F16-Cleaned.stl").rotate(-PI/2,0,0).scale(0.02, initShape=True)
+    plane = OWF.Object_wireFrame(filename="./objects/F16.stl").rotate(-PI/2,0,0).scale(0.02, initShape=True)
     world = OB.Object_container(objList = (
         net,
         plane,
