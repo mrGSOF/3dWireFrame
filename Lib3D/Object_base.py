@@ -45,11 +45,24 @@ class Object_container(Object_base):
                 self.shapes[elm].rotate(x, y, z, dcm, initShape)                
         return self
 
-    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=(0,0,0)):
+    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=None):
         if elements == []:
+            if origin == "arithCenter":
+                points = self.getShape()
+                origin = L.findArithmeticCenter(points)
+                
+            elif origin == "minMaxCenter":
+                points = self.getShape()
+                origin = L.findMinMaxCenter(points)
+
+            else:
+                if origin == None:
+                    origin = self.origin
+
             for shape in self.shapes:
-                shape.translate(V=self.origin)
+                shape.translate(V=ML.scale_V3(origin, -1))
                 shape.rotate(x, y, z, dcm, initShape, origin=origin)
+                shape.translate(V=origin)
         else:
             for elm in elements:
                 self.shapes[elm].translate(V=self.origin)
@@ -59,10 +72,10 @@ class Object_container(Object_base):
     def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[]):
         if elements == []:
             if initShape == True:
-                self.initOrigin = (L._translate([self.initOrigin], x,y,z,V))[0]
+                self.initOrigin = (L.translate([self.initOrigin], x,y,z,V))[0]
                 self.origin = self.initOrigin
             else:
-                self.origin = (L._translate([self.origin], x,y,z,V))[0]
+                self.origin = (L.translate([self.origin], x,y,z,V))[0]
         else:
             for elm in elements:
                 self.shapes[elm].translate(x, y, z, dcm, initShape)                
@@ -86,5 +99,3 @@ class Object_container(Object_base):
             shapes1 = self.shapes[p1[0]].getShape()
             lines += [L.Line(shapes0[p0[1]], shapes1[p1[1]])]
         return lines
-
-    
