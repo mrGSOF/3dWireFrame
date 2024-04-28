@@ -11,16 +11,6 @@ __status__ = "Development"
 import math, copy
 pi = math.pi
 
-def mean(points):
-    mean = [0]*(len(points[0]))
-
-    for axis in points:
-        for i in range(len(axis)):
-            mean[i]+=axis[i]
-    for i in range(len(mean)):
-        mean[i] = mean[i]/len(points)
-    return(mean)
-
 def radToDeg(rad) -> float:
     """ Convert radians to degrees """
     return 180*rad/pi # or use this math.degrees(rad)

@@ -56,6 +56,8 @@ if __name__ == "__main__":
         clearScreen(screen, WHITE)
         world.reset()
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
+        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="arithCenter")
+        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="minMaxCenter")
         world.translate(x=400,y=200,z=400, initShape=False)
         drawWireFrame(screen, world, BLACK)
         pygame.display.flip()

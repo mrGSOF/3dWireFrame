@@ -36,21 +36,24 @@ class Object_wireFrame(O.Object_base):
         return self
 
     def scale(self, scale, initShape=False, elements=[]):
-        self.shape = L._scale(self.shape, scale)
+        self.shape = L.scale(self.shape, scale)
         self._updateShape( initShape )
         return self
         
     def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=(0,0,0)):
         shape = self.shape
-        if origin == "center":
-            origin = L._findCenter(shape)
+        if origin == "arithCenter":
+            origin = L.findArithmeticCenter(shape)
+
+        if origin == "minMaxCenter":
+            origin = L.findMinMaxCenter(shape)
 
         if origin != (0,0,0):
             for axis in range(len(shape)):
                 for i in range(len(shape[axis])):
                     shape[axis][i]-=origin[i]
 
-        shape = L._rotate( shape, x,y,z, dcm )
+        shape = L.rotate( shape, x,y,z, dcm )
 
         if origin != (0,0,0):
             for axis in range(len(shape)):
@@ -62,7 +65,7 @@ class Object_wireFrame(O.Object_base):
         return self
 
     def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[], origin=(0,0,0)):
-        self.shape = L._translate( self.shape, x,y,z, V )
+        self.shape = L.translate( self.shape, x,y,z, V )
         self._updateShape( initShape )
         return self
 
@@ -70,4 +73,4 @@ class Object_wireFrame(O.Object_base):
         return self.shape
 
     def getLines(self) -> list:
-        return L._calcLines(self.shape, self.connections)
+        return L.calcLines(self.shape, self.connections)
