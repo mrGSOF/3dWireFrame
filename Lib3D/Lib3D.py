@@ -1,5 +1,13 @@
 from MathLib import MathLib as ML
 
+def dataToDict(points, lines):
+    return({"scale":1.0,
+                  "points_xyz": points,
+                  "connections": lines})
+
+def _findCenter(points):
+    return(ML.mean(points))
+
 def _scale(points, scale) -> list:
     newPoints = [None]*len(points)
     for i,point in enumerate(points):
@@ -35,7 +43,6 @@ def _calcLines(points, connections) -> list:
         p1 = points[toPnt]
         lines[i] = Line(p0,p1)
     return lines
-
 
 class Line():
     def __init__(self, p0=None, p1=None, color=(0,0,0)):

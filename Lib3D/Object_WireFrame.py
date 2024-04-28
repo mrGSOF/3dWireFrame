@@ -11,7 +11,7 @@ class Object_wireFrame(O.Object_base):
             if ext == "json":
                 obj = self._loadJson(filename)
             elif ext == "stl":
-                obj = self._loadStl(filename)
+                obj = self.loadStl(filename)
 
         self.color  = color
         self.initShape   = obj["points_xyz"]
@@ -28,7 +28,7 @@ class Object_wireFrame(O.Object_base):
             obj = json.load(f)
         return obj
 
-    def _loadStl(self, filename, faceCount=500):
+    def loadStl(self, filename, faceCount=500):
         return stlToObj.stlToObj(filename, faceCount=faceCount)
 
     def reset(self):
@@ -40,12 +40,28 @@ class Object_wireFrame(O.Object_base):
         self._updateShape( initShape )
         return self
         
-    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[]):
-        self.shape = L._rotate( self.shape, x,y,z, dcm )
+    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=(0,0,0)):
+        shape = self.shape
+        if origin == "center":
+            origin = L._findCenter(shape)
+
+        if origin != (0,0,0):
+            for axis in range(len(shape)):
+                for i in range(len(shape[axis])):
+                    shape[axis][i]-=origin[i]
+
+        shape = L._rotate( shape, x,y,z, dcm )
+
+        if origin != (0,0,0):
+            for axis in range(len(shape)):
+                for i in range(len(shape[axis])):
+                    shape[axis][i]+=origin[i]
+
+        self.shape = shape
         self._updateShape( initShape )
         return self
 
-    def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[]):
+    def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[], origin=(0,0,0)):
         self.shape = L._translate( self.shape, x,y,z, V )
         self._updateShape( initShape )
         return self

@@ -45,11 +45,11 @@ class Object_container(Object_base):
                 self.shapes[elm].rotate(x, y, z, dcm, initShape)                
         return self
 
-    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[]):
+    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=(0,0,0)):
         if elements == []:
             for shape in self.shapes:
                 shape.translate(V=self.origin)
-                shape.rotate(x, y, z, dcm, initShape)
+                shape.rotate(x, y, z, dcm, initShape, origin=origin)
         else:
             for elm in elements:
                 self.shapes[elm].translate(V=self.origin)
