@@ -1,7 +1,8 @@
 from MathLib import MathLib as ML
 
-def dataToDict(points, lines):
-    return({"scale":1.0,
+def dataToDict(points, lines, scale=1.0, color=(0,0,0)):
+    return({"scale":scale,
+            "color":color,
                   "points_xyz": points,
                   "connections": lines})
 
@@ -50,8 +51,6 @@ def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
 
     for i, point in enumerate(points):
         newPoints[i] = ML.MxV(dcm, point)
-        #np = ML.MxV(dcm, [point[0], point[2], point[1]])
-        #newPoints[i] = [np[0],np[2],np[1]] 
     return newPoints
 
 def translate(points, x=0, y=0, z=0, V=None) -> list:
@@ -63,13 +62,13 @@ def translate(points, x=0, y=0, z=0, V=None) -> list:
         newPoints[i] = ML.addV(point, V)
     return newPoints
 
-def calcLines(points, connections) -> list:
+def calcLines(points, connections, color=(0,0,0)) -> list:
     lines = [0]*len(connections)
     for i, connect in enumerate(connections):
         fromPnt, toPnt = connect
         p0 = points[fromPnt]
         p1 = points[toPnt]
-        lines[i] = Line(p0,p1)
+        lines[i] = Line(p0, p1, color)
     return lines
 
 class Line():
