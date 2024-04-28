@@ -58,6 +58,7 @@ if __name__ == "__main__":
 
         clearScreen(screen, WHITE)
         world.reset()
+        #world.rotate(x=1.8,y=3.14,z=0.3, initShape=False)
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="arithCenter")
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="minMaxCenter")
