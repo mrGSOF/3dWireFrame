@@ -52,8 +52,9 @@ if __name__ == "__main__":
         ))
 
     world = OB.Object_container(objList = (
-        OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True),
-        OWF.Object_wireFrame(filename="./objects/plane.stl").translate(V=(0, 0, 200)).scale(0.3, initShape=True),
+        OWF.Object_wireFrame(filename="./objects/net.json").translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True),
+        #OWF.Object_wireFrame(filename="./objects/plane.stl").translate(V=(0, 0, 0), initShape=True).scale(0.3, initShape=True),
+        OWF.Object_wireFrame(filename="./objects/F16-Cleaned.stl").rotate(-PI/2,0,0).scale(0.02, initShape=True),
         ))
     print(obj2.origin)
     pygame.init()
