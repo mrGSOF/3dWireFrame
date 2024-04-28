@@ -9,11 +9,14 @@ WHITE = (255,255,255)
 BLACK = (0,0,0)
 PI = math.pi
 
-def drawWireFrame(screen, obj, color) -> None:
+def drawWireFrame(screen, obj, color=None) -> None:
     for line in obj.getLines():
         x0, y0, z0 = line.p0
         x1, y1, z1 = line.p1
-        pygame.draw.line( screen, color, (x0, y0), (x1, y1) ) #< Line from P0 to P1
+        lcolor = color
+        if lcolor == None:
+            lcolor = line.color
+        pygame.draw.line( screen, lcolor, (x0, y0), (x1, y1) ) #< Line from P0 to P1
 
 def clearScreen(screen, color=(255,255,255)) -> None:
   screen.fill(color)
@@ -26,9 +29,9 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    net = OWF.Object_wireFrame(obj=Objects.net(25,20)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
-    sphere = OWF.Object_wireFrame(obj=Objects.sphere(500, 25)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
-    plane = OWF.Object_wireFrame(filename="./objects/F16.stl").rotate(-PI/2,0,0).scale(0.02, initShape=True)
+    net = OWF.Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
+    sphere = OWF.Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
+    plane = OWF.Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(0.02, initShape=True)
     world = OB.Object_container(objList = (
         net,
         plane,
@@ -59,7 +62,7 @@ if __name__ == "__main__":
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="arithCenter")
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="minMaxCenter")
         world.translate(x=400,y=200,z=400, initShape=False)
-        drawWireFrame(screen, world, BLACK)
+        drawWireFrame(screen, world)
         pygame.display.flip()
         camAngX_r += 0.5*dt
         camAngY_r += 1*dt

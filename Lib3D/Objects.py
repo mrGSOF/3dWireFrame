@@ -1,7 +1,9 @@
 import math
 from Lib3D import Lib3D as L
 
-def net(N=1000, M=1000, dN=100, dM=100) -> dict:
+LINE_COLOR = (0,0,0)
+
+def net(N=1000, M=1000, dN=100, dM=100, scale=1.0, color=LINE_COLOR) -> dict:
     points = []
     lines = []
     for x in range(N):
@@ -16,10 +18,10 @@ def net(N=1000, M=1000, dN=100, dM=100) -> dict:
 
         lines.append([N*2+(y*2), N*2+(y*2)+1])
 
-    jsonObject = L.dataToDict(points, lines)
-    return(jsonObject)
+    jsonObject = L.dataToDict(points, lines, scale, color)
+    return jsonObject
 
-def sphere(radius, resolution=10):
+def sphere(radius, resolution=10, scale=1.0, color=LINE_COLOR):
     points = []
     lines = []
 
@@ -48,7 +50,42 @@ def sphere(radius, resolution=10):
         p2 = (resolution - 1) * resolution * 2 + (j + 1) % (resolution * 2)
         lines.append((p1, p2))
 
-    return(L.dataToDict(points, lines))
+    return L.dataToDict(points, lines, scale, color)
+
+def rectangle(X, Y, Z, scale=1.0, color=LINE_COLOR):
+    X = 0.5*X
+    Y = 0.5*Y
+    X = 0.5*Z
+
+    points = [
+        [-X, Y,-Z], #<0
+        [ X, Y,-Z], #<1
+        [ X, Y, Z], #<2
+        [-X, Y, Z], #<3
+
+        [-X,-Y,-Z], #<4
+        [ X,-Y,-Z], #<5
+        [ X,-Y, Z], #<6
+        [-X,-Y, Z], #<7
+        ]
+    
+    lines = [[0,1],
+             [1,2],
+             [2,3],
+             [3,0],
+
+             [4,5],
+             [5,6],
+             [6,7],
+             [7,4],
+
+             [0,4],
+             [1,5],
+             [2,6],
+             [3,7],
+             ]
+
+    return L.dataToDict(points, lines, scale, color)
 
 if __name__ == "__main__":
     print(len(sphere(1000, 25)))

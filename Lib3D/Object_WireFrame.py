@@ -5,7 +5,7 @@ from Lib3D import stlToObj
 import json
 
 class Object_wireFrame(O.Object_base):
-    def __init__(self, obj=None, filename=None, color=(0,0,0)):
+    def __init__(self, obj=None, filename=None, color=None):
         if filename != None:
             ext = filename.split(".")[-1]
             if ext == "json":
@@ -13,6 +13,11 @@ class Object_wireFrame(O.Object_base):
             elif ext == "stl":
                 obj = self.loadStl(filename)
 
+        if color == None:
+            if "color" in obj:
+                color = obj["color"]
+            else:
+                color = (0,0,0)
         self.color  = color
         self.initShape   = obj["points_xyz"]
         self.connections = obj["connections"]
@@ -73,4 +78,4 @@ class Object_wireFrame(O.Object_base):
         return self.shape
 
     def getLines(self) -> list:
-        return L.calcLines(self.shape, self.connections)
+        return L.calcLines(self.shape, self.connections, self.color)

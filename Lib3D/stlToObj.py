@@ -1,9 +1,10 @@
+from Lib3D import Lib3D as L
 try:
     import pymeshlab as ml
 except:
     print("could not find pymeshlab. DO NOT USE STL FILES!!\nTo install, run ```pip install pymeshlab```")
 
-def stlToObj(filename, faceCount=-1):
+def stlToObj(filename, faceCount=-1, color=(0,0,0)):
     # Load the STL file
     ms = ml.MeshSet()
     ms.load_new_mesh(filename)
@@ -36,8 +37,4 @@ def stlToObj(filename, faceCount=-1):
         lines.append((i*3+2, i*3))
 
     # Now you have a list of points and lines
-    obj = {"scale": 100.0,
-            "points_xyz": points,
-            "connections": lines}
-
-    return(obj)
+    return L.dataToDict(points, lines, scale=100.0, color=color)
