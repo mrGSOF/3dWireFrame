@@ -1,6 +1,7 @@
 import pygame, math
 from Lib3D import Object_WireFrame as OWF
 from Lib3D import Object_base as OB
+from Lib3D import Objects
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -25,38 +26,15 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    import json
-    #objName = "./objects/cube.json"
-    #objName = "./objects/pyramid.json"
-    #objName = "./objects/house.json"
-    obj1 = OWF.Object_wireFrame(filename="./objects/house.json").scale(0.5, initShape=True)
-    net1 = OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True)
-    net2 = OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True).rotate(-PI/2,0,0)
-    net3 = OWF.Object_wireFrame(filename="./objects/net.json").scale(0.2, initShape=True).rotate(0,PI/2,0)
-    obj2 = OB.Object_container(objList = (
-        OWF.Object_wireFrame(filename="./objects/cube.json").translate(V=(0,0,0), initShape=True),       #< Body
-        OWF.Object_wireFrame(filename="./objects/pyramid.json").translate(V=(0,-250,0), initShape=True), #< Roof
-        OWF.Object_wireFrame(filename="./objects/frame.json").translate(V=(0,0,-100), initShape=True),   #< Window
-        ),
-                               connections=[[[0,4],[1,0]],[[0,5],[1,1]],[[0,6],[1,2]],[[0,7],[1,3]]])
-
-    obj3 = OWF.Object_wireFrame(filename="./objects/frame.json").translate(V=(0,0,0), initShape=True)
-
+    net = OWF.Object_wireFrame(obj=Objects.net(25,20)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
+    sphere = OWF.Object_wireFrame(obj=Objects.sphere(500, 25)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
+    plane = OWF.Object_wireFrame(filename="./objects/F16-Cleaned.stl").rotate(-PI/2,0,0).scale(0.02, initShape=True)
     world = OB.Object_container(objList = (
-        # obj1.translate(V=(0,0,0), initShape=True),
-        # obj2.translate(V=(0,-100,0), initShape=True),
-        # obj3.translate(V=(0,0,0), initShape=True),
-        net1.translate(V=(0,-100,0), initShape=True),
-        net2.translate(V=(0,-100,0), initShape=True),
-        net3.translate(V=(0,-100,0), initShape=True),
+        net,
+        plane,
+        sphere,
         ))
 
-    world = OB.Object_container(objList = (
-        OWF.Object_wireFrame(filename="./objects/net.json").translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True),
-        #OWF.Object_wireFrame(filename="./objects/plane.stl").translate(V=(0, 0, 0), initShape=True).scale(0.3, initShape=True),
-        OWF.Object_wireFrame(filename="./objects/F16-Cleaned.stl").rotate(-PI/2,0,0).scale(0.02, initShape=True),
-        ))
-    print(obj2.origin)
     pygame.init()
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
@@ -69,6 +47,7 @@ if __name__ == "__main__":
     roofAng_r = 0.0
     houseAng_r = 0.0
     run = True
+
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,19 +55,12 @@ if __name__ == "__main__":
 
         clearScreen(screen, WHITE)
         world.reset()
-        obj1.rotate(x=0,y=roofAng_r,z=houseAng_r, initShape=False)
-        roof = obj2.shapes[1]
-        roof.rotate(x=0,y=roofAng_r,z=0, initShape=False)
-        window = obj2.shapes[2]
-        window.translate(V=(0,0,0)).rotate(x=0,y=0,z=10*t).translate(V=(0,0,0))
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
-        world.translate(x=400,y=400,z=400, initShape=False)
+        world.translate(x=400,y=200,z=400, initShape=False)
         drawWireFrame(screen, world, BLACK)
         pygame.display.flip()
         camAngX_r += 0.5*dt
         camAngY_r += 1*dt
-        roofAng_r = (PI/4/2)*math.sin(2*PI*1*t)
-        houseAng_r = (PI/4)*math.sin(2*PI*1.5*t)
         t += dt
         clock.tick(30)
 
