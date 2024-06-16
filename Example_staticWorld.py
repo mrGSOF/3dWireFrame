@@ -2,6 +2,7 @@ import pygame, math
 from Lib3D import Object_WireFrame as OWF
 from Lib3D import Object_base as OB
 from Lib3D import Objects
+from Lib3D import WireFrame_display as DISP
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -41,6 +42,7 @@ if __name__ == "__main__":
     pygame.init()
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
+    wireframe = DISP.WireFrame(screen, pygame.draw.line, f=None)
 
     fps = 30
     dt = 1/fps
@@ -62,12 +64,18 @@ if __name__ == "__main__":
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="arithCenter")
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="minMaxCenter")
-        world.translate(x=400,y=200,z=400, initShape=False)
-        drawWireFrame(screen, world)
-        pygame.display.flip()
+        #world.translate(x=400,y=200,z=400, initShape=False)
+        ### Draw 3D world
+        clearScreen(screen, WHITE)
+        wireframe.draw(world)
+        
+        ### Wait for next step time
         camAngX_r += 0.5*dt
         camAngY_r += 1*dt
         t += dt
         clock.tick(30)
+        
+        ### Display output
+        pygame.display.flip()
 
     pygame.quit()

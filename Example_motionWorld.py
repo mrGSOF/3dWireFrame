@@ -2,21 +2,13 @@ import pygame, math
 from Lib3D import Object_WireFrame as OWF
 from Lib3D import Object_base as OB
 from Lib3D import Objects
+from Lib3D import WireFrame_display as DISP
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 PI = math.pi
-
-def drawWireFrame(screen, obj, color=None) -> None:
-    for line in obj.getLines():
-        x0, y0, z0 = line.p0
-        x1, y1, z1 = line.p1
-        lcolor = color
-        if lcolor == None:
-            lcolor = line.color
-        pygame.draw.line( screen, lcolor, (x0, y0), (x1, y1) ) #< Line from P0 to P1
 
 def clearScreen(screen, color=(255,255,255)) -> None:
   screen.fill(color)
@@ -29,16 +21,15 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    net = OWF.Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
-    plane = OWF.Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(0.02, initShape=True)
+    house = OWF.Object_wireFrame(filename="./objects/house.json", color=(0,180,180)).scale(1.0, initShape=True)
     world = OB.Object_container(objList = (
-        net,
-        plane,
+        house,
         ))
 
     pygame.init()
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
+    wireframe = DISP.WireFrame(screen, pygame.draw.line, f=None)
 
     fps = 30
     dt = 1/fps
@@ -76,7 +67,7 @@ if __name__ == "__main__":
         keys = pygame.key.get_pressed()
         speed = 1
         location[0] += -(keys[pygame.K_RIGHT] - keys[pygame.K_LEFT])*1.0
-        location[2] += -(keys[pygame.K_UP] - keys[pygame.K_DOWN])*1.0
+        location[1] += -(keys[pygame.K_UP] - keys[pygame.K_DOWN])*1.0
         attitude[0] += -(keys[pygame.K_q] - keys[pygame.K_z])*0.05
         
         clearScreen(screen, WHITE)
@@ -85,11 +76,15 @@ if __name__ == "__main__":
         #world.translate(x=400,y=200,z=400, initShape=False)
         world.translate(V=location, initShape=False)
         world.rotate(*attitude, initShape=False)
-        drawWireFrame(screen, world)
-        pygame.display.flip()
-        camAngX_r += 0.5*dt
-        camAngY_r += 1*dt
-        t += dt
+
+        ### Draw 3D world
+        clearScreen(screen, WHITE)
+        wireframe.draw(world)
+        
+        ### Wait for next step time
         clock.tick(30)
+        
+        ### Display output
+        pygame.display.flip()
 
     pygame.quit()
