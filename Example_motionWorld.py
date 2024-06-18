@@ -29,7 +29,7 @@ if __name__ == "__main__":
     pygame.init()
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
-    wireframe = DISP.WireFrame(screen, pygame.draw.line, f=50)
+    wireframe = DISP.WireFrame(screen, pygame.draw.line, f=50, scale=10)
 
     fps = 30
     dt = 1/fps
@@ -38,6 +38,8 @@ if __name__ == "__main__":
     camAngY_r = 0.0
     roofAng_r = 0.0
     houseAng_r = 0.0
+    centerX = int(SCREEN_WIDTH/2)
+    centerY = int(SCREEN_HEIGHT/2)
     run = True
     location = [0,200,0]
     attitude = [0.0, 0.0, 0.0]
@@ -71,7 +73,13 @@ if __name__ == "__main__":
         location[2] += -(keys[pygame.K_q] - keys[pygame.K_z])*5*speed
         wireframe.f += -(keys[pygame.K_w] - keys[pygame.K_s])*10
         #attitude[0] += -(keys[pygame.K_q] - keys[pygame.K_z])*0.05*speed
-        print(wireframe.f, location[0], location[1], location[2])
+        #print(wireframe.f, location[0], location[1], location[2])
+        mousePos = pygame.mouse.get_pos()
+        mousePos = (0.5*PI*(mousePos[0]/centerX -1), 0.5*PI*(1 -mousePos[1]/centerY))
+        #print(mousePos)
+        #attitude[1] = mousePos[0]
+        #attitude[0] = mousePos[1]
+
         clearScreen(screen, WHITE)
         world.reset()
         world.translate(V=location, initShape=False)

@@ -1,8 +1,9 @@
 class WireFrame():
-    def __init__(self, screen, line, f=100):
+    def __init__(self, screen, line, f=50, scale=1.0):
         self.screen = screen
         self.line = line
         self.f = f
+        self.scale = scale
         self.centerX, self.centerY = (int(screen.get_width()/2), int(screen.get_height()/2))
         
     def draw(self, obj, color=None) -> None:
@@ -21,7 +22,7 @@ class WireFrame():
         x, y, z = point
         if (self.f != None):
             if (z > self.f):
-                s = self.f/z*10
+                s = (self.f/z)*self.scale
             else:
                 s = 100000
             x *= s

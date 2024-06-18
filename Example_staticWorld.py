@@ -42,7 +42,7 @@ if __name__ == "__main__":
     pygame.init()
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
-    wireframe = DISP.WireFrame(screen, pygame.draw.line, f=None)
+    wireframe = DISP.WireFrame(screen, pygame.draw.line, f=50, scale=10.0)
 
     fps = 30
     dt = 1/fps
@@ -64,7 +64,7 @@ if __name__ == "__main__":
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="arithCenter")
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="minMaxCenter")
-        #world.translate(x=400,y=200,z=400, initShape=False)
+        world.translate(x=0,y=0,z=1000, initShape=False)
         ### Draw 3D world
         clearScreen(screen, WHITE)
         wireframe.draw(world)
