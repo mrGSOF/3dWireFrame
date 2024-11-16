@@ -33,7 +33,7 @@ def sphere(radius, resolution=10, scale=1.0, color=LINE_COLOR):
             x = radius * math.sin(theta) * math.cos(phi)
             y = radius * math.sin(theta) * math.sin(phi)
             z = radius * math.cos(theta)
-            points.append((x, y, z))
+            points.append([x, y, z])
 
     # Create lines
     for i in range(resolution - 1):
@@ -42,7 +42,7 @@ def sphere(radius, resolution=10, scale=1.0, color=LINE_COLOR):
             p2 = i * resolution * 2 + (j + 1) % (resolution * 2)
             p3 = ((i + 1) * resolution * 2 + j) % (len(points))
             p4 = ((i + 1) * resolution * 2 + (j + 1) % (resolution * 2)) % (len(points))
-            lines.extend([(p1, p2), (p1, p3), (p2, p4)])
+            lines.extend(((p1, p2), (p1, p3), (p2, p4)))
 
     # Connect the last row
     for j in range(resolution * 2):

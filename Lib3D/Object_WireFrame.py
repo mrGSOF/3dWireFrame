@@ -13,6 +13,7 @@ class Object_wireFrame(O.Object_base):
             elif ext == "stl":
                 obj = self.loadStl(filename)
 
+
         if color == None:
             if "color" in obj:
                 color = obj["color"]
@@ -50,22 +51,25 @@ class Object_wireFrame(O.Object_base):
         if origin == "arithCenter":
             origin = L.findArithmeticCenter(shape)
 
-        if origin == "minMaxCenter":
+        elif origin == "minMaxCenter":
             origin = L.findMinMaxCenter(shape)
 
         if origin != (0,0,0):
-            for axis in range(len(shape)):
-                for i in range(len(shape[axis])):
-                    shape[axis][i]-=origin[i]
+            for point in shape:
+                #print(point)
+                for i, (p, ofs) in enumerate(zip(point, origin)):
+                    #print(type(shape))
+                    #print(type(shape[axis]))
+                    point[i] = p -ofs
 
         shape = L.rotate( shape, x,y,z, dcm )
 
         if origin != (0,0,0):
-            for axis in range(len(shape)):
-                for i in range(len(shape[axis])):
-                    shape[axis][i]+=origin[i]
+            for point in shape:
+                for i, (p, ofs) in enumerate(zip(point, origin)):
+                    point[i] = p -ofs
 
-        self.shape = shape
+        self.shape = tuple(shape)
         self._updateShape( initShape )
         return self
 

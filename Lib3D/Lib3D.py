@@ -56,7 +56,7 @@ def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
 def translate(points, x=0, y=0, z=0, V=None) -> list:
     newPoints = [None]*len(points)
     if V == None:
-        V = (x, y, z)
+        V = [x, y, z]
 
     for i, point in enumerate(points):
         newPoints[i] = ML.addV(point, V)
