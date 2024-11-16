@@ -32,9 +32,9 @@ def stlToObj(filename, faceCount=-1, color=(0,0,0)):
             points.append(vertexMatrix[vertex].tolist())
         
         # Add the edges (lines) to the list
-        lines.append((i*3, i*3+1))
-        lines.append((i*3+1, i*3+2))
-        lines.append((i*3+2, i*3))
+        lines.append([i*3, i*3+1])
+        lines.append([i*3+1, i*3+2])
+        lines.append([i*3+2, i*3])
 
     # Now you have a list of points and lines
     return L.dataToDict(points, lines, scale=100.0, color=color)

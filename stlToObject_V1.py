@@ -17,9 +17,9 @@ for i in range(len(your_mesh.vectors)):
         points.append(vertex)
     
     # Add the edges (lines) to the list
-    lines.append((i*3, i*3+1))
-    lines.append((i*3+1, i*3+2))
-    lines.append((i*3+2, i*3+0))
+    lines.append([i*3, i*3+1])
+    lines.append([i*3+1, i*3+2])
+    lines.append([i*3+2, i*3+0])
 
 # Now you have a list of points and lines
 objectDict = {"scale": 100.0,
