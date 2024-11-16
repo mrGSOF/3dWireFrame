@@ -43,7 +43,7 @@ if __name__ == "__main__":
                 run = False
 
         keys = pygame.key.get_pressed()
-        wireframe.f += -(keys[pygame.K_w] - keys[pygame.K_s])*10
+        wireframe.f += -(keys[pygame.K_1] - keys[pygame.K_2])*10
         location, attitude = player.update()
         
         clearScreen(screen, WHITE)

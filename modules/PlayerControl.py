@@ -25,7 +25,8 @@ class PlayerControl():
   def updatePos(self) -> list:
     keys = pygame.key.get_pressed()
     speed = 1
-    self.posX += -(keys[pygame.K_RIGHT] - keys[pygame.K_LEFT])*2.0*speed
-    self.posY += -(keys[pygame.K_UP] - keys[pygame.K_DOWN])*2.0*speed
-    self.posZ += -(keys[pygame.K_q] - keys[pygame.K_z])*5*speed
+    self.posX += -(keys[pygame.K_RIGHT] -keys[pygame.K_LEFT])*2.0*speed
+    self.posX += -(keys[pygame.K_d]     -keys[pygame.K_a])*2.0*speed
+    self.posY += -(keys[pygame.K_UP]    -keys[pygame.K_DOWN])*2.0*speed
+    self.posZ += -(keys[pygame.K_x]     -keys[pygame.K_w])*5*speed
     return (self.posX, self.posY, self.posZ)

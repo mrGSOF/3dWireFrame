@@ -20,6 +20,7 @@ class WireFrame():
     def camera(self, point) -> list:
         ### Perspective projection <https://en.wikipedia.org/wiki/3D_projection> ###
         x, y, z = point
+        z = -z
         if (self.f != None):
             if (z > self.f):
                 s = (self.f/z)*self.scale
