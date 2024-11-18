@@ -30,7 +30,7 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
     wireframe = DISP.WireFrame(screen, pygame.draw.line, f=50, scale=10)
-    player = PlayerControl.PlayerControl( center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
+    player = PlayerControl.PlayerControl( pos=(0,0,-400), center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
 
     fps = 30
     dt = 1/fps

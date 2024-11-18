@@ -8,6 +8,7 @@ class PlayerControl():
     self.posZ = pos[2]
     self.attX = att[0]
     self.attY = att[1]
+    self.attZ = att[2]
     self.centerX = center[0]
     self.centerY = center[1]
 
@@ -16,11 +17,17 @@ class PlayerControl():
     att = self.updateAtt()
     return (pos, att)
 
+  def getPosition(self):
+    return (self.posX, self.posY, self.posZ)
+    
+  def getAttitude(self):
+    return (self.attX, self.attY, self.attZ)
+
   def updateAtt(self) -> list:
     (mPosX, mPosY) = pygame.mouse.get_pos()
     self.attY = 0.5*ML.pi*(mPosX/self.centerX -1)
     self.attX = 0.5*ML.pi*(mPosY/self.centerY -1)
-    return (self.attX, self.attY)
+    return self.getAttitude()
 
   def updatePos(self) -> list:
     keys = pygame.key.get_pressed()
@@ -29,4 +36,4 @@ class PlayerControl():
     self.posX += -(keys[pygame.K_d]     -keys[pygame.K_a])*2.0*speed
     self.posY += -(keys[pygame.K_UP]    -keys[pygame.K_DOWN])*2.0*speed
     self.posZ += -(keys[pygame.K_x]     -keys[pygame.K_w])*5*speed
-    return (self.posX, self.posY, self.posZ)
+    return self.getPosition()
