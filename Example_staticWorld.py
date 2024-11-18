@@ -58,13 +58,13 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
               run = False
 
-        clearScreen(screen, WHITE)
         world.reset()
         #world.rotate(x=1.8,y=3.14,z=0.3, initShape=False)
         world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="arithCenter")
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="minMaxCenter")
-        world.translate(x=0,y=0,z=1000, initShape=False)
+        world.translate(x=0,y=0,z=-1000, initShape=False)
+
         ### Draw 3D world
         clearScreen(screen, WHITE)
         wireframe.draw(world)

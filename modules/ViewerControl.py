@@ -1,7 +1,7 @@
 import pygame, math
 from MathLib import MathLib as ML
 
-class PlayerControl():
+class ViewerControl():
   def __init__(self, pos=(0,0,0), att=(0,0,0), center=(0,0)):
     self.posX = pos[0]
     self.posY = pos[1]

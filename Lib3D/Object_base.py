@@ -8,6 +8,12 @@ class Object_base():
     def loadJson(self, filename):
         return self
 
+    def setOrigin(self, x=0, y=0, z=0, initShape=False, elements=[]):
+        return self
+
+    def getOrigin(self, origon=None, elements=[] ):
+        return (0,0,0)
+
     def scale(self, scale, state=False, elements=[]):
         return self
 
@@ -36,6 +42,31 @@ class Object_container(Object_base):
             shape.reset()
         return self
 
+    def setOrigin(self, x=0, y=0, z=0, initShape=False, elements=[]):
+        if elements == []:
+            self.origin = (x,y,z)
+            if initShape == True:
+                self.initOrigin = self.origin
+            else:
+                self.origin = (x,y,z)
+        else:
+            for elm in elements:
+                self.shapes[elm].setOrigin(x, y, z, initShape)                
+        return self
+
+    def getOrigin(self, origon=None, elements=[] ):
+        if elements == []:
+            if origin == "arithCenter":
+                points = self.getShape()
+                return L.findArithmeticCenter(points)
+                
+            elif origin == "minMaxCenter":
+                points = self.getShape()
+                return L.findMinMaxCenter(points)
+
+            else:
+                return self.origin
+
     def scale(self, scale, initShape=False, elements=[]):
         if elements == []:
             for shape in self.shapes:
@@ -55,9 +86,8 @@ class Object_container(Object_base):
                 points = self.getShape()
                 origin = L.findMinMaxCenter(points)
 
-            else:
-                if origin == None:
-                    origin = self.origin
+            elif origin == None:
+                origin = self.origin
 
             for shape in self.shapes:
                 shape.translate(V=ML.scale_V3(origin, -1))

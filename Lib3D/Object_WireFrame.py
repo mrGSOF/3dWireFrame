@@ -15,13 +15,14 @@ class Object_wireFrame(O.Object_base):
 
         if color == None:
             if "color" in obj:
-                color = obj["color"]
+                color = obj["color"]  #< Color from file
             else:
-                color = (0,0,0)
-        self.color  = color
-        self.initShape   = obj["points_xyz"]
-        self.connections = obj["connections"]
-        self.reset().scale(obj["scale"], initShape=True)
+                color = (0,0,0)       #< Default color
+        self.color       = color               #< The color to draw all lines (from file, overriden, or default)
+        self.initShape   = obj["points_xyz"]   #< List of original xyz-coordinates of all corner-points in the shape
+        self.shape       = obj["points_xyz"]   #< List of manipulated xyz-coordinates of all corner-points in the shape
+        self.connections = obj["connections"]  #< List of interconnected points that form a line
+        self.reset().scale(obj["scale"], initShape=True) #< Scale the coordinates of all points and store
 
     def _updateShape(self, initShape=False):
         if initShape == True:
@@ -39,6 +40,26 @@ class Object_wireFrame(O.Object_base):
     def reset(self):
         self.shape = self.initShape
         return self
+
+    def setOrigin(self, x=0, y=0, z=0, initShape=False, elements=[]):
+        self.origin = (x,y,z)
+        if initShape == True:
+            self.initOrigin = self.origin
+        else:
+            self.origin = (x,y,z)
+        return self
+
+    def getOrigin(self, origon=None, elements=[] ):
+        if origin == "arithCenter":
+            points = self.getShape()
+            return L.findArithmeticCenter(points)
+            
+        elif origin == "minMaxCenter":
+            points = self.getShape()
+            return L.findMinMaxCenter(points)
+
+        else:
+            return self.origin
 
     def scale(self, scale, initShape=False, elements=[]):
         self.shape = L.scale(self.shape, scale)
