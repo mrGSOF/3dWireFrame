@@ -3,7 +3,7 @@ from Lib3D import Object_WireFrame as OWF
 from Lib3D import Object_base as OB
 from Lib3D import Objects
 from Lib3D import WireFrame_display as DISP
-from modules import PlayerControl
+from modules import ViewerControl
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
     wireframe = DISP.WireFrame(screen, pygame.draw.line, f=50, scale=10)
-    player = PlayerControl.PlayerControl( pos=(0,0,-400), center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
+    viewer = ViewerControl.ViewerControl( pos=(0,0,-400), center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
 
     fps = 30
     dt = 1/fps
@@ -44,12 +44,12 @@ if __name__ == "__main__":
 
         keys = pygame.key.get_pressed()
         wireframe.f += -(keys[pygame.K_1] - keys[pygame.K_2])*10
-        location, attitude = player.update()
+        viewer.update()
         
         clearScreen(screen, WHITE)
         world.reset()
-        world.translate(V=location, initShape=False)
-        world.rotate(*attitude, initShape=False)
+        world.translate(V=viewer.getPosition(), initShape=False)
+        world.rotate(*viewer.getAttitude(), initShape=False)
 
         ### Draw 3D world
         clearScreen(screen, WHITE)

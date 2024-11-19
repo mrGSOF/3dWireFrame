@@ -41,15 +41,7 @@ class Object_wireFrame(O.Object_base):
         self.shape = self.initShape
         return self
 
-    def setOrigin(self, x=0, y=0, z=0, initShape=False, elements=[]):
-        self.origin = (x,y,z)
-        if initShape == True:
-            self.initOrigin = self.origin
-        else:
-            self.origin = (x,y,z)
-        return self
-
-    def getOrigin(self, origon=None, elements=[] ):
+    def getOrigin(self, origin=None, elements=[] ):
         if origin == "arithCenter":
             points = self.getShape()
             return L.findArithmeticCenter(points)
@@ -61,32 +53,26 @@ class Object_wireFrame(O.Object_base):
         else:
             return self.origin
 
+    def setOrigin(self, origin, initShape=False, elements=[]):
+        if initShape == True:
+            shape = self.initShape #< Modify the original points
+        else:
+            shape = self.shape     #< Modify the temporary points
+
+        if origin != (0,0,0):
+            ### If new origin is different offset all points
+            for axis in range(len(shape)):
+                for i in range(len(shape[axis])):
+                    shape[axis][i] -= origin[i]
+        return self
+        
     def scale(self, scale, initShape=False, elements=[]):
         self.shape = L.scale(self.shape, scale)
         self._updateShape( initShape )
         return self
         
     def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=(0,0,0)):
-        shape = self.shape
-        if origin == "arithCenter":
-            origin = L.findArithmeticCenter(shape)
-
-        if origin == "minMaxCenter":
-            origin = L.findMinMaxCenter(shape)
-
-        if origin != (0,0,0):
-            for axis in range(len(shape)):
-                for i in range(len(shape[axis])):
-                    shape[axis][i]-=origin[i]
-
-        shape = L.rotate( shape, x,y,z, dcm )
-
-        if origin != (0,0,0):
-            for axis in range(len(shape)):
-                for i in range(len(shape[axis])):
-                    shape[axis][i]+=origin[i]
-
-        self.shape = shape
+        self.shape = L.rotate( self.shape, x,y,z, dcm )
         self._updateShape( initShape )
         return self
 

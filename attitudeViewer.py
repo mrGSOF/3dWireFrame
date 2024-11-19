@@ -26,13 +26,14 @@ if __name__ == "__main__":
     import json
     d = 50
 
-    net  = OWF.Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
+    net  = OWF.Object_wireFrame(obj=Objects.net(25,25), color=(0,100,0)).rotate(x=PI/2, y=0, z=0).translate(V=(0, 0, 0), initShape=True).scale(0.2, initShape=True)
     axis = OWF.Object_wireFrame(filename="./objects/axis.json", color=(10,10,10)).translate(V=(0, 0, 0), initShape=True).scale(5.0, initShape=True)
     f16  = OWF.Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255))
-
+    #print(f16.getOrigin(origin="arithCenter"))
     f16.translate(V=(0, 0, 0), initShape=True)
+    f16.setOrigin( origin=f16.getOrigin(origin="arithCenter"), initShape=True )
     f16.scale(0.02, initShape=True)
-#    f16.translate(V=(0, 0, 0), initShape=True)
+#    f16.translate(V=(0, 0, 200), initShape=True)
 #    f16.rotate(x=0, y=PI/2, z=PI, origin="arithCenter", initShape=True)
 #    f16.translate(V=(-50, -50, 0), initShape=True)
 
@@ -46,15 +47,12 @@ if __name__ == "__main__":
     clock     = pygame.time.Clock()
     screen    = newScreen("3D Wire Frame - Attitude Viewer", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
     wireframe = DISP.WireFrame(screen, pygame.draw.line, f=50, scale=10)
-    viewer    = ViewerControl.ViewerControl( pos=(0,0,-1000), center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
-    uut       = ObjectControl.ObjectControl( pos=(0,0,0), center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
+    viewer    = ViewerControl.ViewerControl( pos=(0,0,-1200), center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
+    uut       = ObjectControl.ObjectControl( pos=(200,200,200),   center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
 
     fps = 30
     dt = 1/fps
     t = 0.0
-    yaw_r = 0.0
-    pitch_r = 0.0
-    roll_r = 0.0
     objects = [viewer, uut]
     objSel  = 0
     
@@ -80,7 +78,6 @@ if __name__ == "__main__":
 
         ### Update 3D world
         world.reset()
-        #f16.rotate(x=roll_r, y=pitch_r, z=yaw_r, initShape=False)
         f16.rotate(*uut.getAttitude(), initShape=False)
         f16.translate(V=uut.getPosition(), initShape=False)
         world.translate(V=viewer.getPosition(), initShape=False)
