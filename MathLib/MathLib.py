@@ -106,8 +106,8 @@ def DCM_V2(rad) -> list:
     return [[cosA,-sinA],[sinA,cosA]]
 
 ### https://en.wikipedia.org/wiki/Rotation_matrix
-def DCM_ZYX(a, b, c) -> list:
-    """ a is around Z, b is around Y, and c is around X"""
+def DCM_XZY(a, b, c) -> list:
+    """ a is around X, b is around Z, and c is around Y"""
     ca = math.cos(a)
     cb = math.cos(b)
     cc = math.cos(c)
@@ -115,9 +115,9 @@ def DCM_ZYX(a, b, c) -> list:
     sa = math.sin(a)
     sb = math.sin(b)
     sc = math.sin(c)
-    DCM = [ [ca*cb, ca*sb*sc-sa*cc, ca*sb*cc+sa*sc],
-            [sa*cb, sa*sb*sc+ca*cc, sa*sb*cc-ca*sc],
-            [ -sb,       cb*sc,          cb*cc    ]]
+    DCM = [ [    cb*cc,        -sb,         cb*sc    ],
+            [sa*sc+ca*cc*sb,   ca*cb,  ca*sb*sc-cc*sa],
+            [cc*sa*sb-ca*sc,   cb*sa,  ca*sb*sc      ]]
     return DCM
 
 def DCM_XYZ(a, b, c) -> list:
@@ -132,6 +132,66 @@ def DCM_XYZ(a, b, c) -> list:
     DCM = [ [    cb*cc,           -cb*sc,        sb  ],
             [ca*sc+sa*sb*cc,  ca*cc-sa*sb*sc,  -sa*cb],
             [sa*sc-ca*sb*cc,  sa*cc+ca*sb*sc,   ca*cb]]
+    return DCM
+
+def DCM_YXZ(a, b, c) -> list:
+    """ a is around Y, b is around X, and c is around Z"""
+    ca = math.cos(a)
+    cb = math.cos(b)
+    cc = math.cos(c)
+    
+    sa = math.sin(a)
+    sb = math.sin(b)
+    sc = math.sin(c)
+    DCM = [ [ca*cc+sa*sb*sc,  cc*sa*sb-ca*sc,   cb*sa],
+            [     cb*sc    ,      cb*cc,          -sb],
+            [ca*sb*sc-cc*sa,  ca*cc*sb+sa*sc,   ca*cb]]
+    return DCM
+
+def DCM_YZX(a, b, c) -> list:
+    """ a is around Y, b is around Z, and c is around X"""
+    ca = math.cos(a)
+    cb = math.cos(b)
+    cc = math.cos(c)
+    
+    sa = math.sin(a)
+    sb = math.sin(b)
+    sc = math.sin(c)
+    DCM = [ [ca*cb  , sa*sc-ca*cc*sb, cc*sa+ca*sb*sc],
+            [  sb   ,     cb*cc,          -cb*sc    ],
+            [-cb*sa , ca*sc+cc*sa*sb, ca*cc-sa*sb*sc]]
+    return DCM
+
+def DCM_ZYX(a, b, c) -> list:
+    """ a is around Z, b is around Y, and c is around X"""
+    ca = math.cos(a)
+    cb = math.cos(b)
+    cc = math.cos(c)
+
+    p = pi/2
+    sa = math.cos(a -p) #<math.sin(a)
+    sb = math.cos(b -p) #<math.sin(b)
+    sc = math.cos(c -p) #<math.sin(c)
+
+    DCM = [ [ca*cb, ca*sb*sc-cc*sa, sa*sc+ca*sb*cc],
+            [sa*cb, sa*sb*sc+ca*cc, cc*sa*sb-ca*sc],
+            [ -sb,       cb*sc,          cb*cc    ]]
+    return DCM
+
+def DCM_ZXY(a, b, c) -> list:
+    """ a is around Z, b is around X, and c is around Y"""
+    ca = math.cos(a)
+    cb = math.cos(b)
+    cc = math.cos(c)
+
+    p = pi/2
+    sa = math.cos(a -p) #<math.sin(a)
+    sb = math.cos(b -p) #<math.sin(b)
+    sc = math.cos(c -p) #<math.sin(c)
+
+    DCM = [ [ca*cb, ca*sb*sc-cc*sa, sa*sc+ca*sb*cc],
+            [sa*cb, sa*sb*sc+ca*cc, cc*sa*sb-ca*sc],
+            [ -sb,       cb*sc,          cb*cc    ]]
     return DCM
 
 def MxV_2x2(M,V) -> list:

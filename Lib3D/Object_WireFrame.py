@@ -13,16 +13,16 @@ class Object_wireFrame(O.Object_base):
             elif ext == "stl":
                 obj = self.loadStl(filename)
 
-
         if color == None:
             if "color" in obj:
-                color = obj["color"]
+                color = obj["color"]  #< Color from file
             else:
-                color = (0,0,0)
-        self.color  = color
-        self.initShape   = obj["points_xyz"]
-        self.connections = obj["connections"]
-        self.reset().scale(obj["scale"], initShape=True)
+                color = (0,0,0)       #< Default color
+        self.color       = color               #< The color to draw all lines (from file, overriden, or default)
+        self.initShape   = obj["points_xyz"]   #< List of original xyz-coordinates of all corner-points in the shape
+        self.shape       = obj["points_xyz"]   #< List of manipulated xyz-coordinates of all corner-points in the shape
+        self.connections = obj["connections"]  #< List of interconnected points that form a line
+        self.reset().scale(obj["scale"], initShape=True) #< Scale the coordinates of all points and store
 
     def _updateShape(self, initShape=False):
         if initShape == True:
@@ -41,35 +41,38 @@ class Object_wireFrame(O.Object_base):
         self.shape = self.initShape
         return self
 
+    def getOrigin(self, origin=None, elements=[] ):
+        if origin == "arithCenter":
+            points = self.getShape()
+            return L.findArithmeticCenter(points)
+            
+        elif origin == "minMaxCenter":
+            points = self.getShape()
+            return L.findMinMaxCenter(points)
+
+        else:
+            return self.origin
+
+    def setOrigin(self, origin, initShape=False, elements=[]):
+        if initShape == True:
+            shape = self.initShape #< Modify the original points
+        else:
+            shape = self.shape     #< Modify the temporary points
+
+        if origin != (0,0,0):
+            ### If new origin is different offset all points
+            for axis in range(len(shape)):
+                for i in range(len(shape[axis])):
+                    shape[axis][i] -= origin[i]
+        return self
+        
     def scale(self, scale, initShape=False, elements=[]):
         self.shape = L.scale(self.shape, scale)
         self._updateShape( initShape )
         return self
         
     def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=(0,0,0)):
-        shape = self.shape
-        if origin == "arithCenter":
-            origin = L.findArithmeticCenter(shape)
-
-        elif origin == "minMaxCenter":
-            origin = L.findMinMaxCenter(shape)
-
-        if origin != (0,0,0):
-            for point in shape:
-                #print(point)
-                for i, (p, ofs) in enumerate(zip(point, origin)):
-                    #print(type(shape))
-                    #print(type(shape[axis]))
-                    point[i] = p -ofs
-
-        shape = L.rotate( shape, x,y,z, dcm )
-
-        if origin != (0,0,0):
-            for point in shape:
-                for i, (p, ofs) in enumerate(zip(point, origin)):
-                    point[i] = p -ofs
-
-        self.shape = tuple(shape)
+        self.shape = L.rotate( self.shape, x,y,z, dcm )
         self._updateShape( initShape )
         return self
 
