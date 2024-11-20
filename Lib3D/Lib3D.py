@@ -46,8 +46,7 @@ def scale(points, scale) -> list:
 def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
     newPoints = [None]*len(points)
     if dcm == None:
-        dcm = ML.DCM_XYZ(x, y, z)
-        #dcm = ML.DCM_ZYX(z, y, x)
+        dcm = ML.DCM_YXZ(y, x, z) #< This is the proper rotation order for our coordinate system
 
     for i, point in enumerate(points):
         newPoints[i] = ML.MxV(dcm, point)
