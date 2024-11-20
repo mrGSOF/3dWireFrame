@@ -3,8 +3,7 @@ from Lib3D import Object_WireFrame as OWF
 from Lib3D import Object_base as OB
 from Lib3D import WireFrame_display as DISP
 from Lib3D import Objects
-from modules import ViewerControl
-from modules import ObjectControl
+from modules import Controls
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -38,8 +37,28 @@ class AttitudeViewer():
       self.clock     = pygame.time.Clock()
       self.screen    = newScreen("3D Wire Frame - Attitude Viewer", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
       self.wireframe = DISP.WireFrame(self.screen, pygame.draw.line, f=50, scale=10)
-      self.viewer    = ViewerControl.ViewerControl( pos=(0,0,-1200),   center=(int(self.screen.get_width()/2), int(self.screen.get_height()/2)) )
-      self.uut       = ObjectControl.ObjectControl( pos=(200,200,200), center=(int(self.screen.get_width()/2), int(self.screen.get_height()/2)) )
+      self.viewer    = Controls.Viewer( pos=(0,0,-1200),
+                                        center=(int(self.screen.get_width()/2),int(self.screen.get_height()/2)),
+                                        moveLeftKey  = pygame.K_a,
+                                        moveRightKey = pygame.K_d,
+                                        moveUpKey    = pygame.K_UP,
+                                        moveDownKey  = pygame.K_DOWN,
+                                        moveFwdKey   = pygame.K_w,
+                                        moveBackKey  = pygame.K_x,
+                                        tiltLeft     = pygame.K_COMMA,
+                                        tiltRight    = pygame.K_PERIOD
+                                       )
+      self.uut       = Controls.Object( pos=(200,200,200),
+                                        center=(int(self.screen.get_width()/2), int(self.screen.get_height()/2)),
+                                        moveLeftKey  = pygame.K_a,
+                                        moveRightKey = pygame.K_d,
+                                        moveUpKey    = pygame.K_UP,
+                                        moveDownKey  = pygame.K_DOWN,
+                                        moveFwdKey   = pygame.K_w,
+                                        moveBackKey  = pygame.K_x,
+                                        tiltLeft     = pygame.K_COMMA,
+                                        tiltRight    = pygame.K_PERIOD
+                                       )
 
       self.fps = 30
       self.dt = 1/self.fps
@@ -60,12 +79,13 @@ class AttitudeViewer():
                 self.run = False
 
           keys = pygame.key.get_pressed()
+          (mPosX, mPosY) = pygame.mouse.get_pos()
           if keys[pygame.K_v]:
             self.objSel = 0
           elif keys[pygame.K_u]:
             self.objSel = 1
 
-          self.objects[self.objSel].update()
+          self.objects[self.objSel].update(keys, mPosX, mPosY, speed=2)
 
           self.wireframe.f += -(keys[pygame.K_1] - keys[pygame.K_2])*10
 

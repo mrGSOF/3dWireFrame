@@ -3,7 +3,7 @@ from Lib3D import Object_WireFrame as OWF
 from Lib3D import Object_base as OB
 from Lib3D import Objects
 from Lib3D import WireFrame_display as DISP
-from modules import ViewerControl
+from modules import Controls
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -30,7 +30,17 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
     screen = newScreen("3D Wire Frame Shapes", SCREEN_WIDTH, SCREEN_HEIGHT, WHITE)
     wireframe = DISP.WireFrame(screen, pygame.draw.line, f=50, scale=10)
-    viewer = ViewerControl.ViewerControl( pos=(0,0,-400), center=(int(screen.get_width()/2), int(screen.get_height()/2)) )
+    viewer = Controls.Viewer( pos=(0,0,-400),
+                              center=(int(screen.get_width()/2), int(screen.get_height()/2)),
+                              moveLeftKey  = pygame.K_a,
+                              moveRightKey = pygame.K_d,
+                              moveUpKey    = pygame.K_UP,
+                              moveDownKey  = pygame.K_DOWN,
+                              moveFwdKey   = pygame.K_w,
+                              moveBackKey  = pygame.K_x,
+                              tiltLeft     = pygame.K_COMMA,
+                              tiltRight    = pygame.K_PERIOD
+                             )
 
     fps = 30
     dt = 1/fps
@@ -43,8 +53,9 @@ if __name__ == "__main__":
                 run = False
 
         keys = pygame.key.get_pressed()
+        (mPosX, mPosY) = pygame.mouse.get_pos()
         wireframe.f += -(keys[pygame.K_1] - keys[pygame.K_2])*10
-        viewer.update()
+        viewer.update(keys, mPosX, mPosY, speed=2)
         
         clearScreen(screen, WHITE)
         world.reset()
