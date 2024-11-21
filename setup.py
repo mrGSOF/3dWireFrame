@@ -31,7 +31,7 @@ def readme():
         return f.read()
 
 setup(
-      name='GSOF_3dWireFram',
+      name='GSOF_3dWireFrame',
       version='0.1',
       description='Protocol stack to bridge between an Arduino and Python',
       long_description=readme(),
@@ -47,12 +47,17 @@ setup(
         'Topic :: Multimedia :: Graphics :: 3D Rendering',
       ],
       platforms = 'any',
-      keywords='3dWireFram',
+      keywords='3dWireFrame',
       url = 'https://github.com/mrGSOF/3dWireFrame.git',
       author='Guy Soffer',
       author_email='gsoffer@yahoo.com',
       license='GPL-3.0-or-later',
-      packages=['Lib3D', 'MathLib', 'modules', 'objects'],
+      packages=['GSOF_3dWireFrame',
+                'GSOF_3dWireFrame.Lib3D',
+                'GSOF_3dWireFrame.MathLib',
+                'GSOF_3dWireFrame.modules'],
+      include_package_data=True,
+      package_data={'GSOF_3dWireFrame': ['./objects/*.*']},
       install_requires=[
         'pyserial>=2.7',
     ]
