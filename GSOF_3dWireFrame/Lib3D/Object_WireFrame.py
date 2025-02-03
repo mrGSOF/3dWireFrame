@@ -1,8 +1,8 @@
-from MathLib import MathLib as ML
-from Lib3D import Object_base as O
-from Lib3D import Lib3D as L
-from Lib3D import stlToObj
 import json
+from GSOF_3dWireFrame.MathLib import MathLib as ML
+from GSOF_3dWireFrame.Lib3D import Object_base as O
+from GSOF_3dWireFrame.Lib3D import Lib3D as L
+from GSOF_3dWireFrame.Lib3D import stlToObj
 
 class Object_wireFrame(O.Object_base):
     def __init__(self, obj=None, filename=None, color=None):

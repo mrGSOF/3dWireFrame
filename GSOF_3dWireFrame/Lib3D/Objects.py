@@ -1,5 +1,5 @@
 import math
-from Lib3D import Lib3D as L
+from GSOF_3dWireFrame.Lib3D import Lib3D as L
 
 LINE_COLOR = (0,0,0)
 
