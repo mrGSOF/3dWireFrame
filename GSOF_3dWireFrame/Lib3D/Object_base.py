@@ -1,5 +1,5 @@
-from MathLib import MathLib as ML
-from Lib3D import Lib3D as L
+from GSOF_3dWireFrame.MathLib import MathLib as ML
+from GSOF_3dWireFrame.Lib3D import Lib3D as L
 
 class Object_base():
     def __init__(self, obj=None, filename=None):

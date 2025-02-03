@@ -1,4 +1,4 @@
-from MathLib import MathLib as ML
+from GSOF_3dWireFrame.MathLib import MathLib as ML
 
 def dataToDict(points, lines, scale=1.0, color=(0,0,0)):
     return({"scale":scale,
