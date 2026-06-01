@@ -76,7 +76,7 @@ class Object_wireFrame(O.Object_base):
         self._updateShape( initShape )
         return self
 
-    def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[], origin=(0,0,0)):
+    def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[]):
         self.shape = L.translate( self.shape, x,y,z, V )
         self._updateShape( initShape )
         return self

@@ -29,12 +29,12 @@ class F16_View(OB.Object_container):
 
         self.plane = OWF.Object_wireFrame(
             filename="%s/objects/f16.stl"%folder, color=( 0, 0,255))\
-            .scale(1.5)\
-            .rotate(x=0, y=0, z=0)\
-            .translate(V=(0, 0, 0), initShape=True)
+            .rotate(x=0, y=0, z=0)
         self.plane.setOrigin(
             origin=self.plane.getOrigin(origin="arithCenter") )\
-            .scale(0.01, initShape=True)
+            .scale(0.015)\
+            .rotate(x=0, y=0, z=0)\
+            .translate(V=(0, 0, 0), initShape=True)
         
         plume = OWF.Object_wireFrame(
            filename="%s/objects/Plume.json"%folder, color=( 255, 0,0))\

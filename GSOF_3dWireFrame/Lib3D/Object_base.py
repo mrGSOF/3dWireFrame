@@ -108,7 +108,7 @@ class Object_container(Object_base):
                 self.origin = (L.translate([self.origin], x,y,z,V))[0]
         else:
             for elm in elements:
-                self.shapes[elm].translate(x, y, z, dcm, initShape)                
+                self.shapes[elm].translate(x, y, z, V, initShape)
         return self
 
     def getShape(self):
