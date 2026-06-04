@@ -110,6 +110,25 @@ class Object_container(Object_base):
             for elm in elements:
                 self.shapes[elm].translate(x, y, z, V, initShape)
         return self
+        
+    def transform(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0), initShape=False, elements=[]):
+        if elements == []:
+            ###Go over all elements in the object
+            if initShape == True:
+                ###Modify the original coordinates of the object
+                self.initOrigin = (L.transform([self.initOrigin], scale, rotate, translate))[0]
+                self.origin = self.initOrigin
+            else:
+                ###Modify the current coordinates of the object
+                self.origin = (L.transform([self.origin], scale, rotate, translate))[0]
+        else:
+            ###Go over selected elements in the object
+            for elm in elements:
+                self.scale(scale, initShape)
+                self.rotate(*rotate, initShape)
+                self.translate(*translate, initShape)        
+                self.shapes[elm].translate(x, y, z, V, initShape)
+        return self
 
     def getShape(self):
         shapes = []

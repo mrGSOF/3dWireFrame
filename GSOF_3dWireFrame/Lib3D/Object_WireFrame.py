@@ -81,8 +81,16 @@ class Object_wireFrame(O.Object_base):
         self._updateShape( initShape )
         return self
 
+    def transform(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0), initShape=False):
+        self.shape = L.transform(scale, rotate, translate, initShape)
+        self._updateShape( initShape )
+        return self
+    
     def getShape(self) -> list:
         return self.shape
 
     def getLines(self) -> list:
         return L.calcLines(self.shape, self.connections, self.color)
+
+#    def update(self) -> None:
+#        return
