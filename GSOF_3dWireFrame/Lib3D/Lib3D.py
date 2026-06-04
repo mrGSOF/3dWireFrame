@@ -37,10 +37,20 @@ def findMinMaxCenter(points):
         meanPoint[i] = (minPoint[i]+maxPoint[i])/2
     return meanPoint
 
-def scale(points, scale) -> list:
+def scalePoint(point, scale, dim) -> list:
+    new = [0]*dim
+    for i in range(0, dim):
+        new[i] = point[i]*scale[i]
+    return new
+        
+def scale(points, _scale) -> list:
+    """Scale coordinates"""
+    dim = len(points[0])
+    if not isinstance(scale, (tuple,list)):
+        _scale = (_scale,)*dim
     newPoints = [None]*len(points)
-    for i,point in enumerate(points):
-        newPoints[i] = ML.scale_V3(point, scale)
+    for i, point in enumerate(points):
+        newPoints[i] = scalePoint(point, _scale, dim)
     return newPoints
 
 def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
@@ -61,6 +71,12 @@ def translate(points, x=0, y=0, z=0, V=None) -> list:
         newPoints[i] = ML.addV(point, V)
     return newPoints
 
+def transform(points, _scale, _rotate, _translate) -> list:
+    points = scale(points, _scale)
+    points = rotate(points, *_rotate)
+    points = translate(points, *_translate)
+    return points
+    
 def calcLines(points, connections, color=(0,0,0)) -> list:
     lines = [0]*len(connections)
     for i, connect in enumerate(connections):
