@@ -2,149 +2,48 @@ from GSOF_3dWireFrame.MathLib import MathLib as ML
 from GSOF_3dWireFrame.Lib3D import Lib3D as L
 
 class Object_base():
-    def __init__(self, obj=None, filename=None):
-        return
+    def __init__(self):
+        self.stateOrigin = ML.I(4) #< 4x4 matrix to store the original state of scale, rotation and translations
+        self.reset()               #< 4x4 matrix to store the currect state
 
-    def loadJson(self, filename):
+    def setOrigin(self, setInitState=True):
+        """Set current state as the new original state"""
+        if setInitState != False:
+            self.stateOrigin = copy.copydeep(self.state)
         return self
 
-    def setOrigin(self, x=0, y=0, z=0, initShape=False, elements=[]):
+    def getOrigin(self ):
+        """Get the original state"""
+        return self.stateOrigin
+
+    def reset(self, newState=None):
+        """Reset current state to original or new state"""
+        state = self.stateOrigin if newState == None else newState
+        self.state = copy.copydeep(state) #< 4x4 matrix to store the currect state
+        return self
+    
+    def scale(self, scale, setInitState=False):
+        """Apply scaling to curent state"""
+        self.state[0][0] *= scale[0]
+        self.state[1][1] *= scale[1]
+        self.state[2][2] *= scale[2]
+        self.setOrigin(setInitState)
         return self
 
-    def getOrigin(self, origon=None, elements=[] ):
-        return (0,0,0)
-
-    def scale(self, scale, state=False, elements=[]):
+    def rotate(self, x, y, z, dcm, setInitState=False):
+        """Apply rotation to curent state"""
+        self.setOrigin(setInitState)
         return self
 
-    def rotate(self, x, y, z, dcm, state=False, elements=[]):
+    def translate(self, x, y, z, setInitState=False):
+        """Apply translation to curent state"""
+        self.state[0][3] += x
+        self.state[1][3] += y
+        self.state[2][3] += z
+        self.setOrigin(setInitState)
         return self
 
-    def translate(self, x, y, z, V, state=False, elements=[]):
+    def transform(self, scle, rotate, translate, setInitState=False):
+        """Apply transformation to curent state"""
+        self.setOrigin(setInitState)
         return self
-
-    def getShape(self):
-        return []
-
-    def getLines(self):
-        return []
-
-class Object_container(Object_base):
-    def __init__(self, objList=[], connections=[]):
-        self.shapes = objList
-        self.initOrigin = [0,0,0]
-        self.origin = [0,0,0]
-        self.connections = connections
-
-    def reset(self):
-        self.origin = self.initOrigin
-        for shape in self.shapes:
-            shape.reset()
-        return self
-
-    def setOrigin(self, x=0, y=0, z=0, initShape=False, elements=[]):
-        if elements == []:
-            self.origin = (x,y,z)
-            if initShape == True:
-                self.initOrigin = self.origin
-            else:
-                self.origin = (x,y,z)
-        else:
-            for elm in elements:
-                self.shapes[elm].setOrigin(x, y, z, initShape)                
-        return self
-
-    def getOrigin(self, origon=None, elements=[] ):
-        if elements == []:
-            if origin == "arithCenter":
-                points = self.getShape()
-                return L.findArithmeticCenter(points)
-                
-            elif origin == "minMaxCenter":
-                points = self.getShape()
-                return L.findMinMaxCenter(points)
-
-            else:
-                return self.origin
-
-    def scale(self, scale, initShape=False, elements=[]):
-        if elements == []:
-            for shape in self.shapes:
-                shape.scale(scale, initShape)
-        else:
-            for elm in elements:
-                self.shapes[elm].rotate(x, y, z, dcm, initShape)                
-        return self
-
-    def rotate(self, x=0, y=0, z=0, dcm=None, initShape=False, elements=[], origin=None):
-        if elements == []:
-            if origin == "arithCenter":
-                points = self.getShape()
-                origin = L.findArithmeticCenter(points)
-                
-            elif origin == "minMaxCenter":
-                points = self.getShape()
-                origin = L.findMinMaxCenter(points)
-
-            elif origin == None:
-                origin = self.origin
-
-            for shape in self.shapes:
-                shape.translate(V=ML.scale_V3(origin, -1))
-                shape.rotate(x, y, z, dcm, initShape, origin=origin)
-                shape.translate(V=origin)
-        else:
-            for elm in elements:
-                self.shapes[elm].translate(V=self.origin)
-                self.shapes[elm].rotate(x, y, z, dcm, initShape)                
-        return self
-
-    def translate(self, x=0, y=0, z=0, V=None, initShape=False, elements=[]):
-        if elements == []:
-            if initShape == True:
-                self.initOrigin = (L.translate([self.initOrigin], x,y,z,V))[0]
-                self.origin = self.initOrigin
-            else:
-                self.origin = (L.translate([self.origin], x,y,z,V))[0]
-        else:
-            for elm in elements:
-                self.shapes[elm].translate(x, y, z, V, initShape)
-        return self
-        
-    def _transform(self, scale, rotate, translate, initShape):
-        self.scale(scale, initShape)
-        self.rotate(*rotate, dcm=None, initShape=initShape)
-        self.translate(V=translate, initShape=initShape)        
-
-    def transform(self, scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0), initShape=False, elements=[]):
-        if elements == []:
-            ###Go over all elements in the object
-            if initShape == True:
-                ###Modify the original coordinates of the object
-                self._transform(scale, rotate, translate, initShape)
-            else:
-                ###Modify the current coordinates of the object
-                self._transform(scale, rotate, translate, initShape)
-        else:
-            ###Go over selected elements in the object
-             self._transform(scale, rotate, translate, initShape)
-        return self
-
-    def getShape(self):
-        shapes = []
-        for shape in self.shapes:
-            shapes += shape.getShape()
-        return shapes
-
-    def getLines(self):
-        lines = []
-        for shape in self.shapes:
-            shape.translate(V=self.origin)
-            lines += shape.getLines()
-
-        for line in self.connections:
-            p0, p1 = line
-            shapes0 = self.shapes[p0[0]].getShape()
-            shapes1 = self.shapes[p1[0]].getShape()
-            lines += [L.Line(shapes0[p0[1]], shapes1[p1[1]])]
-        return lines
