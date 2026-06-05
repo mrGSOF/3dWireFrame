@@ -102,8 +102,7 @@ if __name__ == "__main__":
         wow = WeightOnWheels(left=True, right=True, nose=True)
         f16.update(t, fcs=None, eng=eng, ins=None, wow=wow)
 ##        #world.rotate(x=1.8,y=3.14,z=0.3)
-        world.rotate(x=camAngX_r,y=camAngY_r,z=0)
-        world.translate(x=0,y=0,z=-600)
+        world.transform(rotate=(camAngX_r,camAngY_r,0), translate=(0,0,-600))
 
         ### Draw 3D world
         clearScreen(screen, WHITE)
