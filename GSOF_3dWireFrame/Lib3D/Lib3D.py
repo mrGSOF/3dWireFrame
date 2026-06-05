@@ -46,7 +46,7 @@ def scalePoint(point, scale, dim) -> list:
 def scale(points, _scale) -> list:
     """Scale coordinates"""
     dim = len(points[0])
-    if not isinstance(scale, (tuple,list)):
+    if not isinstance(_scale, (tuple,list)):
         _scale = (_scale,)*dim
     newPoints = [None]*len(points)
     for i, point in enumerate(points):
@@ -73,6 +73,7 @@ def translate(points, x=0, y=0, z=0, V=None) -> list:
 
 def transform(points, _scale, _rotate, _translate) -> list:
     points = scale(points, _scale)
+    print(points)
     points = rotate(points, *_rotate)
     points = translate(points, *_translate)
     return points
