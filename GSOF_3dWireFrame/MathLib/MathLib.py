@@ -316,6 +316,14 @@ def ones(rows, cols) -> list:
     """ Returns the rows by cols zero matrix Z """
     return matrix(rows, cols, val=1)
 
+def I(size) -> list:
+    """ Returns the size by size identity matrix I """
+    I = [0]*size
+    for row in range(0,size):
+        I[row] = [0]*size
+        I[row][row] = 1
+    return I
+
 def T(M) -> list:
     """ Returns the transposed Matrix of M """
     rows = len(M)
@@ -329,15 +337,7 @@ def T(M) -> list:
     for i in range(0,cols):
         O[i] = getCol(M,i)
     return O
-    
-def I(size) -> list:
-    """ Returns the size by size identity matrix I """
-    I = [0]*size
-    for row in range(0,size):
-        I[row] = [0]*size
-        I[row][row] = 1
-    return I
-    
+        
 def invM(M) -> list:
     """ Not ready yet, Returns the inverse of the matrix M (Using Naive Gauss elimination method) """
     rows = len(M)
@@ -373,11 +373,6 @@ def LU(M) -> list:
             U[i] = addV(tmpRow2, tmpRow1)
         M = copy.copy(U)
     return (L, U)
-
-def copyIntoMatrix(M, S, rs=0, cs=0) -> None:
-    for ri, row in enumerate(S):
-        for ci, val in enumerate(row):
-            self.state[rs+ri][cs+ci] = val
 
 if __name__ == "__main__":
 #    M = [[1,2,3,4],
