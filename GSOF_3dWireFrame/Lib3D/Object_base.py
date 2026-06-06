@@ -8,7 +8,8 @@ class Object_base():
 
     def reset(self, all=True):
         """Reset current state to original"""
-        self.state = copy.copydeep(self.stateOrigin) #< 4x4 matrix to store the currect state
+        self.state = self.getOrigin() #< 4x4 matrix to store the currect state
+        self.updated = False
         return self
 
     def setOrigin(self, newState=None):
@@ -17,6 +18,7 @@ class Object_base():
         if newState == None:
             newState = self.stateOrigin
         self.stateOrigin = copy.copydeep(newState)
+        self.update = False
         return self
 
     def getOrigin(self) -> list:
@@ -45,6 +47,7 @@ class Object_base():
         self.state[0][0] *= scale[0]
         self.state[1][1] *= scale[1]
         self.state[2][2] *= scale[2]
+        self.update = False
         return self
     
     def copyDcmIntoState(self, dcm: list) -> None:
@@ -58,6 +61,7 @@ class Object_base():
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
         self.copyDcmIntoState(ML.MxM(self.state, dcm)
+        self.update = False
         return self
 
     def translate(self, x, y, z):
@@ -65,19 +69,34 @@ class Object_base():
         self.state[0][3] += x
         self.state[1][3] += y
         self.state[2][3] += z
+        self.update = False
         return self
 
-    def transform(self, scale: list, rotate: list, translate: list):
+    def transform(self,
+                  scale: list=(1,1,1),
+                  rotate: list=(0,0,0),
+                  translate: list=(0,0,0),
+                  transMatrix: list=None
+                  ):
         """Apply transformation to curent state"""
-        self\
-        .scale(scale)\
-        .rotate(rotate)\
-        .translate(translate)
+        if transMatrix == None:
+            self\
+            .scale(scale)\
+            .rotate(rotate)\
+            .translate(translate)
+        else:
+            self.state = L.updateTransformationMatrix(self.state, transMatrix)
+        self.update = False
         return self
 
-    def update(self, state) -> None:
+    def isUpdated(self) -> bool:
+        return bool(self._updated))
+
+    def update(self) -> None:
         """Apply transformation matrix to state"""
-        self.state = L.updateTransformationMatrix(self.state, state)
+        if not self.isUpdated():
+            self.transform(transformMatrix=transMatrix)
+        self.updated = True
 
     def getLines(self) -> list:
         """Return all lines of object"""
