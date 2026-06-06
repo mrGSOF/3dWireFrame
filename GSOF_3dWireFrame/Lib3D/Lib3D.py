@@ -59,18 +59,22 @@ def getRotationMatrix(x=0, y=0, z=0) -> list:
 
 def getTransformMatrix(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0)) -> list:
     """Return the transformation matrix"""
-    M = ML.copyIntoMatrix(ML.zeros(4,4), getRotationMatrix(*rotate), rs=0, cs=0)
-    M[0][3] = translate[0] #< Add translation
-    M[1][3] = translate[1]
-    M[2][3] = translate[2]
-    M[3][3] = 1
-    M[0][0] *= scale[0] #< Add scaling
+    M = getRotationMatrix(*rotate) + [0,0,0,1]
+    M[0][0] *= scale[0]    #< Add scaling
     M[1][1] *= scale[1]
     M[2][2] *= scale[2]
+    M[0] += [translate[0]] #< Add translation
+    M[1] += [translate[1]]
+    M[2] += [translate[2]]
     return M
 
 def updateTransformationMatrix(oldT, newT) -> list:
-    return
+    M = ML.copyIntoMatrix(oldT, ML.MxM(oldT[0:2], newT[0:3]), rs=0, cs=0)
+    M[0][3] += newT[0] #< Add translation
+    M[1][3] += newT[1]
+    M[2][3] += newT[2]
+    M[3][3] = 1        #< Just to make sure
+    return M
 
 def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
     newPoints = [None]*len(points)
@@ -114,15 +118,19 @@ def calcLines(points, connections, color=(0,0,0)) -> list:
 
 class Line():
     def __init__(self, p0=None, p1=None, color=(0,0,0)):
-        self.p0 = p0
-        self.p1 = p1
+        self.points = [p0, p1]
         self.color = color
+### THE METHODS BELOW ARE NOT USED
+##    def scale(self, scale):
+##        self.points = scale(self.points, scale)
+##
+##    def translate(self, x=0, y=0, z=0):
+##        self.points = translate(self.points, x,y,z)
+##    
+##    def rotate(self, x=0, y=0, z=0, dcm=None):
+##        self.points = rotate(self.points, x,y,z,dcm)
 
-    def scale(self, scale):
-        self.p0, self.p1 = scale([self.p0, self.p1], scale)
-
-    def translate(self, x=0, y=0, z=0, V=None):
-        self.p0, self.p1 = translate([self.p0, self.p1], x,y,z,V)
-    
-    def rotate(self, x=0, y=0, z=0, dcm=None):
-        self.p0, self.p1 = rotate([self.p0, self.p1], x,y,z,dcm)
+class Triangle(Line):
+    def __init__(self, p0=None, p1=None, p2=None, color=(0,0,0)):
+        super().__init__(p0, p1, color)
+        self.points += [p2]
