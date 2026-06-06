@@ -25,28 +25,29 @@ class Assembly(Object_base):
         points = self.getLines()
         return super()._findCenter(method, points)
 
-    def _getobj(self) -> list:
+    def getobjects(self) -> list:
         """Return a list of all objects"""
         objects = []
         for obj in self.objects:
-            objects += obj.getobj()
+            objects += obj.getobjects()
         return objects
 
     def getLines(self):
-        """Return lines of all objects. Will automatically start to update transformations if needed"""
+        """Return lines of all objects. Will update transformations if needed"""
         lines = []
         if not self.isUpdated():
             self.update()
 
-        ### Collect lines from all objects 
+        ### Lines from all objects 
         for obj in self.objects:
             lines += obj.getLines()
 
-        for line in self.connections:
-            p0, p1 = line
-            objects0 = self.objects[p0[0]].getobj()
-            objects1 = self.objects[p1[0]].getobj()
-            lines += [L.Line(objects0[p0[1]], objects1[p1[1]])]
+        ### Lines between objects 
+        for between in self.connections:
+            [obj0, p0], [obj1, p1] = between
+            fromPnt = self.objects[obj0][p0]
+            toPnt   = self.objects[obj1][p1]
+            lines += [L.Line(fromPnt, toPnt]
         return lines
 
     def update(self):

@@ -256,7 +256,7 @@ def MxM(M1, M2) -> list:
             row = getRow(M1, r)
             for c in range(0, cols):
                 col = getCol(M2, c) #< col is a row vector
-                O[r][c] = VxV(row[0:len(col), col)
+                O[r][c] = VxV(row[0:len(col)], col)
         return O
     else:
         return [0]

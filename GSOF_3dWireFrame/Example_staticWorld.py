@@ -30,9 +30,9 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    net = OWF.Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
-    sphere = OWF.Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(V=(-1000, 0, 500), initShape=True).scale(0.2, initShape=True)
-    plane = OWF.Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(0.02, initShape=True)
+    net = OWF.Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(-1000, 0, 500).scale(0.2).setOrigin()
+    sphere = OWF.Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(-1000, 0, 500).scale(0.2).setOrigin()
+    plane = OWF.Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(0.02).setOrigin()
     world = OB.Object_container(objList = (
         net,
         plane,
