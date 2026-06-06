@@ -6,80 +6,82 @@ class Object_base():
         self.stateOrigin = ML.I(4) #< 4x4 matrix to store the original state of scale, rotation and translations
         self.reset()               #< 4x4 matrix to store the currect state
 
-    def setOrigin(self, setInitState=True):
+    def reset(self, all=True):
+        """Reset current state to original"""
+        self.state = copy.copydeep(self.stateOrigin) #< 4x4 matrix to store the currect state
+        return self
+
+    def setOrigin(self, newState=None):
         """Set current state as the new original state"""
-        if setInitState != False:
-            self.stateOrigin = copy.copydeep(self.state)
+        
+        if newState == None:
+            newState = self.stateOrigin
+        self.stateOrigin = copy.copydeep(newState)
         return self
 
     def getOrigin(self) -> list:
         """Get the original state"""
-        return self.stateOrigin
-
-    def reset(self, all=True):
-        """Reset current state to original"""
-        self.state = copy.copydeep(stateOrigin) #< 4x4 matrix to store the currect state
-        return self
+        return copy.copydeep(self.stateOrigin)
 
     def _findCenter(self,
                     method: str="arithCenter",
                     points: list|tuple
                     ) -> list:
         """Return the center point of all points"""
-        if origin == "arithCenter":
+        if method == "arithCenter":
             return L.findArithmeticCenter(points)
             
-        elif origin == "minMaxCenter":
+        elif method == "minMaxCenter":
             return L.findMinMaxCenter(points)
 
-        elif origin == None:
+        elif method == None:
             return self.getOrigin()
 
-    def copyDcmIntoState(self, dcm) -> None:
-        for ri, row in enumerate(dcm):
-            for ci, val in enumerate(row):
-                self.state[ri][ci] = val
+        else:
+            return None
 
-    def scale(self, scale, setInitState=False):
+    def scale(self, scale):
         """Apply scaling to curent state"""
         self.state[0][0] *= scale[0]
         self.state[1][1] *= scale[1]
         self.state[2][2] *= scale[2]
-        self.setOrigin(setInitState)
         return self
     
-    def rotate(self, x, y, z, dcm, setInitState=False):
+    def copyDcmIntoState(self, dcm: list) -> None:
+        #self.state = ML.copyIntoMatrix(self.state, dcm, rs=0, cs=0)
+        for ri, row in enumerate(dcm):
+            for ci, val in enumerate(row):
+                self.state[ri][ci] = val
+
+    def rotate(self, x: float, y: float, z: float, dcm: list):
         """Apply rotation to curent state"""
         if dcm == None:
-            dcm = ML.DCM_YXZ(y, x, z) #< This is the proper rotation order for our coordinate system
+            dcm = L.getRotationMatrix(x, y, z)
         self.copyDcmIntoState(ML.MxM(self.state, dcm)
-        self.setOrigin(setInitState)
         return self
 
-    def translate(self, x, y, z, setInitState=False):
+    def translate(self, x, y, z):
         """Apply translation to curent state"""
         self.state[0][3] += x
         self.state[1][3] += y
         self.state[2][3] += z
-        self.setOrigin(setInitState)
         return self
 
-    def transform(self, scale, rotate, translate, setInitState=False):
+    def transform(self, scale: list, rotate: list, translate: list):
         """Apply transformation to curent state"""
-        self.state\
-        .scale(scale, si)\
-        .rotate(rotate, si)\
-        .translate(translate, si)
-        self.setOrigin(setInitState)
+        self\
+        .scale(scale)\
+        .rotate(rotate)\
+        .translate(translate)
         return self
+
+    def update(self, state) -> None:
+        """Apply transformation matrix to state"""
+        self.state = L.updateTransformationMatrix(self.state, state)
 
     def getLines(self) -> list:
         """Return all lines of object"""
         return []
-
-    def update(self, state) -> None:
-        """Update the coordinates of all points of the object"""
-        self.state = L.updateTransformationMatrix(self.state, state)
 
     def getObjects(self) -> list: #< For compatibility with Assembly class
         """Return a list of all objects"""

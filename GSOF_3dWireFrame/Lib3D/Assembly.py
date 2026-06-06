@@ -16,16 +16,16 @@ class Assembly(Object_base):
         """Reset current state and all objects (optional)"""
         super().reset()
         if all:
-            for obj in objects:
+            for obj in self.objects:
                 obj.reset(all)
         return self
 
     def findCenter(self, method) -> list:
         """Returns the center point of the assembly"""
-        points = self.getobj()
-        return super()._findCenter(self, method, points)
+        points = self._getobj()
+        return super()._findCenter(method, points)
 
-    def getobj(self) -> list:
+    def _getobj(self) -> list:
         """Return a list of all objects"""
         objects = []
         for obj in self.objects:
@@ -50,5 +50,5 @@ class Assembly(Object_base):
     def update(self, state):
         """Update the coordinates of all assembly and object"""
         super().update(state)
-        for obj in objects:
-            obj.update(self.state)
+##        for obj in objects:
+##            obj.update(self.state)
