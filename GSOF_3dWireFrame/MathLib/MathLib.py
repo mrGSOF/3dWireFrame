@@ -323,7 +323,7 @@ def I(size) -> list:
         I[row] = [0]*size
         I[row][row] = 1
     return I
-
+    
 def T(M) -> list:
     """ Returns the transposed Matrix of M """
     rows = len(M)
@@ -337,7 +337,7 @@ def T(M) -> list:
     for i in range(0,cols):
         O[i] = getCol(M,i)
     return O
-        
+    
 def invM(M) -> list:
     """ Not ready yet, Returns the inverse of the matrix M (Using Naive Gauss elimination method) """
     rows = len(M)
@@ -373,6 +373,12 @@ def LU(M) -> list:
             U[i] = addV(tmpRow2, tmpRow1)
         M = copy.copy(U)
     return (L, U)
+
+def copyIntoMatrix(M, S, rs=0, cs=0) -> list:
+    for ri, row in enumerate(S):
+        for ci, val in enumerate(row):
+            M[rs+ri][cs+ci] = val
+    return M
 
 if __name__ == "__main__":
 #    M = [[1,2,3,4],

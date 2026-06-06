@@ -59,15 +59,18 @@ def getRotationMatrix(x=0, y=0, z=0) -> list:
 
 def getTransformMatrix(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0)) -> list:
     """Return the transformation matrix"""
-    M = ML.copyIntoMatrix(ML.zeros(4,4), getRotationMatrix(*_rotate))
-    M[0][3] = _translate[0] #< Add translation
-    M[1][3] = _translate[1]
-    M[2][3] = _translate[2]
+    M = ML.copyIntoMatrix(ML.zeros(4,4), getRotationMatrix(*rotate), rs=0, cs=0)
+    M[0][3] = translate[0] #< Add translation
+    M[1][3] = translate[1]
+    M[2][3] = translate[2]
     M[3][3] = 1
-    M[0][0] *= _scale[0] #< Add scaling
-    M[1][1] *= _scale[1]
-    M[2][2] *= _scale[2]
+    M[0][0] *= scale[0] #< Add scaling
+    M[1][1] *= scale[1]
+    M[2][2] *= scale[2]
     return M
+
+def updateTransformationMatrix(oldT, newT) -> list:
+    return
 
 def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
     newPoints = [None]*len(points)
@@ -88,18 +91,17 @@ def translate(points, x=0, y=0, z=0) -> list:
 def transform(points, _scale=(1,1,1), _rotate=(0,0,0), _translate=(0,0,0), M=None) -> list:
     if M == None:
         M = getTransformMatrix(_scale, _rotate, _translate)
-    return update(points, M)
-##    points = scale(points, _scale) #< Inefficiant calculation
+    return _update(points, M)
+##    points = scale(points, _scale) #< Inefficient method
 ##    points = rotate(points, *_rotate)
 ##    return translate(points, *_translate)
 
-def update(points, transformation) -> list:
+def _update(points, transformation) -> list:
     newPoints = [None]*len(points)
     for i, point in enumerate(points):
         point += [1] #< Add translation dimension
         newPoints[i] = (ML.MxV(point, transformation))[0:3]
     return newPoints
-
 
 def calcLines(points, connections, color=(0,0,0)) -> list:
     lines = [0]*len(connections)
