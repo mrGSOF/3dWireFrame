@@ -79,8 +79,11 @@ def getTransformMatrix(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0)) -> list
     M[2] += [translate[2]]
     return M
 
-def updateTransformationMatrix(oldT, newT) -> list:
-    M = ML.copyIntoMatrix(oldT, ML.MxM(oldT[0:3], newT[0:3]), rs=0, cs=0)
+def updateTransformationMatrix(oldT, newT, reverse=False) -> list:
+    if reverse == False:
+        M = ML.copyIntoMatrix(oldT, ML.MxM(oldT[0:3], newT[0:3]), rs=0, cs=0)
+    else:
+        M = ML.copyIntoMatrix(oldT, ML.MxM(newT[0:3], oldT[0:3]), rs=0, cs=0)
     M[0][3] += newT[0][3] #< Add translation
     M[1][3] += newT[1][3]
     M[2][3] += newT[2][3]
