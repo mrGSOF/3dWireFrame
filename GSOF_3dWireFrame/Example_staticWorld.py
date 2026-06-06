@@ -1,8 +1,9 @@
 import pygame, math
-from Lib3D import Object_WireFrame as OWF
-from Lib3D import Object_base as OB
-from Lib3D import Objects
+from Lib3D.Object_WireFrame import Object_wireFrame
+from Lib3D.Object_base import Object_base
+from Lib3D.Assembly import Assembly
 from Lib3D import WireFrame_display as DISP
+from Lib3D import Objects
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -30,10 +31,10 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    net = OWF.Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(-1000, 0, 500).scale(0.2).setOrigin()
-    sphere = OWF.Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(-1000, 0, 500).scale(0.2).setOrigin()
-    plane = OWF.Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(0.02).setOrigin()
-    world = OB.Object_container(objList = (
+    net    = Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(-1000, 0, 500).scale(0.2).setOrigin()
+    sphere = Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(-1000, 0, 500).scale(0.2).setOrigin()
+    plane  = Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(0.02).setOrigin()
+    world  = Assembly(objects = (
         net,
         plane,
         sphere,
@@ -59,11 +60,11 @@ if __name__ == "__main__":
               run = False
 
         world.reset()
-        #world.rotate(x=1.8,y=3.14,z=0.3, initShape=False)
-        world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False)
-        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="arithCenter")
-        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, initShape=False, origin="minMaxCenter")
-        world.translate(x=0,y=0,z=-1000, initShape=False)
+        #world.rotate(x=1.8,y=3.14,z=0.3)
+        world.rotate(x=camAngX_r,y=camAngY_r,z=0)
+        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, origin="arithCenter")
+        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, origin="minMaxCenter")
+        world.translate(x=0,y=0,z=-1000)
 
         ### Draw 3D world
         clearScreen(screen, WHITE)
