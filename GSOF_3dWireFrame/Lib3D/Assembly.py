@@ -38,7 +38,7 @@ class Assembly(Object_base):
         if not self.isUpdated():
             self.update()
 
-        ### Colect lines from all objects 
+        ### Collect lines from all objects 
         for obj in self.objects:
             lines += obj.getLines()
 
@@ -51,7 +51,8 @@ class Assembly(Object_base):
 
     def update(self):
         """Update the coordinates of all assembly and object"""
-        if not self.isUpdated():
-            for obj in self.objects:
+        for obj in self.objects:
+            if not self.isUpdated():
                 obj.transform(transMatrix=self.state)
-            super().updated = True
+            obj.update()
+        self.updated = True
