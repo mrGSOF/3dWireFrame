@@ -1,4 +1,15 @@
 from GSOF_3dWireFrame.MathLib import MathLib as ML
+import json
+from GSOF_3dWireFrame.Lib3D import stlToObj
+
+def loadStl(filename, faceCount=500):
+    return stlToObj.stlToObj(filename, faceCount=faceCount)
+
+def loadJson(filename):
+    obj = None
+    with open(filename) as f:
+        obj = json.load(f)
+    return obj
 
 def dataToDict(points, lines, scale=1.0, color=(0,0,0)):
     return({"scale":scale,

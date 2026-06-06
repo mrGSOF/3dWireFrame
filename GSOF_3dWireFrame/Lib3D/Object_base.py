@@ -1,3 +1,4 @@
+import copy
 from GSOF_3dWireFrame.MathLib import MathLib as ML
 from GSOF_3dWireFrame.Lib3D import Lib3D as L
 
@@ -17,17 +18,17 @@ class Object_base():
         
         if newState == None:
             newState = self.stateOrigin
-        self.stateOrigin = copy.copydeep(newState)
+        self.stateOrigin = copy.deepcopy(newState)
         self.update = False
         return self
 
     def getOrigin(self) -> list:
         """Get the original state"""
-        return copy.copydeep(self.stateOrigin)
+        return copy.deepcopy(self.stateOrigin)
 
     def _findCenter(self,
-                    method: str="arithCenter",
-                    points: list|tuple
+                    points: list|tuple,
+                    method: str="arithCenter"
                     ) -> list:
         """Return the center point of all points"""
         if method == "arithCenter":
@@ -42,8 +43,10 @@ class Object_base():
         else:
             return None
 
-    def scale(self, scale):
+    def scale(self, scale: list|float):
         """Apply scaling to curent state"""
+        if not isinstance(scale, (list, tuple)):
+            scale = (scale,)*3
         self.state[0][0] *= scale[0]
         self.state[1][1] *= scale[1]
         self.state[2][2] *= scale[2]
@@ -52,16 +55,20 @@ class Object_base():
     
     def copyDcmIntoState(self, dcm: list) -> None:
         #self.state = ML.copyIntoMatrix(self.state, dcm, rs=0, cs=0)
+        print(dcm)
         for ri, row in enumerate(dcm):
+            print(row)
             for ci, val in enumerate(row):
                 self.state[ri][ci] = val
 
-    def rotate(self, x: float, y: float, z: float, dcm: list):
+    def rotate(self, x: float, y: float, z: float, dcm: list=None):
         """Apply rotation to curent state"""
+        print(dcm)
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
-        self.copyDcmIntoState(ML.MxM(self.state, dcm)
-        self.update = False
+        print(dcm)
+        self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+        self.stateTouched = False
         return self
 
     def translate(self, x, y, z):
@@ -90,13 +97,10 @@ class Object_base():
         return self
 
     def isUpdated(self) -> bool:
-        return bool(self._updated))
+        return bool(self._updated)
 
     def update(self) -> None:
-        """Apply transformation matrix to state"""
-        if not self.isUpdated():
-            self.transform(transformMatrix=transMatrix)
-        self.updated = True
+        self.update = True
 
     def getLines(self) -> list:
         """Return all lines of object"""
