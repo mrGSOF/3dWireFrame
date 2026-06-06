@@ -9,7 +9,7 @@ class Object_base():
 
     def reset(self, all=True):
         """Reset current state to original"""
-        self.state = self.getOrigin() #< 4x4 matrix to store the currect state
+        self.state = copy.deepcopy(self.getOrigin()) #< 4x4 matrix to store the currect state
         self.stateTouched = True
         return self
 
@@ -17,7 +17,7 @@ class Object_base():
         """Set current state as the new original state"""
         
         if newState == None:
-            newState = self.stateOrigin
+            newState = self.state
         self.stateOrigin = copy.deepcopy(newState)
         return self
 
@@ -42,7 +42,7 @@ class Object_base():
         else:
             return None
 
-    def scale(self, scale: list|float):
+    def scale(self, scale: list|tuple|float):
         """Apply scaling to curent state"""
         if not isinstance(scale, (list, tuple)):
             scale = (scale,)*3
@@ -87,7 +87,9 @@ class Object_base():
             .rotate(rotate)\
             .translate(translate)
         else:
+#            print("use bfr: ", self.state[0:3])
             self.state = L.updateTransformationMatrix(self.state, transMatrix)
+#            print("use aft: ", self.state[0:3])
         self.stateTouched = True
         return self
 
