@@ -62,22 +62,33 @@ def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
         newPoints[i] = ML.MxV(dcm, point)
     return newPoints
 
-def translate(points, x=0, y=0, z=0, V=None) -> list:
+def translate(points, x=0, y=0, z=0) -> list:
     newPoints = [None]*len(points)
-    if V == None:
-        V = [x, y, z]
-
+    T = [x, y, z]
     for i, point in enumerate(points):
-        newPoints[i] = ML.addV(point, V)
+        newPoints[i] = ML.addV(point, T)
     return newPoints
 
 def transform(points, _scale, _rotate, _translate) -> list:
     points = scale(points, _scale)
-    print(points)
     points = rotate(points, *_rotate)
     points = translate(points, *_translate)
     return points
-    
+
+def update(points, transformation) -> list:
+    newPoints = [None]*len(points)
+    for i, point in enumerate(points):
+        newPoints[i] = (ML.addV(point +[1], transformation))[0:3]
+    return newPoints
+
+def updateTransformationMatrix(T1, T2) -> list:
+    ML.copyIntoMatrix(T1, ML.MxM(T1[0:3], T2[0:3])) #< Add rotation and scale
+    T1[0] += T2[0] #< Add translation
+    T1[1] += T2[1]
+    T1[2] += T2[2]
+    T1[3] = 1
+    return T1
+
 def calcLines(points, connections, color=(0,0,0)) -> list:
     lines = [0]*len(connections)
     for i, connect in enumerate(connections):

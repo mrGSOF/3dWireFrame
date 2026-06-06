@@ -227,6 +227,12 @@ def MUL_3x3(M, V):
              M[1][0]*V[0] +M[1][1]*V[1] +M[1][2]*V[2],
              M[2][0]*V[0] +M[2][1]*V[1] +M[2][2]*V[2] ]
 
+def MUL_4x4(M, V):
+    return [ M[0][0]*V[0] +M[0][1]*V[1] +M[0][2]*V[2] +M[0][3]*V[3],
+             M[1][0]*V[0] +M[1][1]*V[1] +M[1][2]*V[2] +M[1][3]*V[3],
+             M[2][0]*V[0] +M[2][1]*V[1] +M[2][2]*V[2] +M[2][3]*V[3],
+             M[3][0]*V[0] +M[3][1]*V[1] +M[3][2]*V[2] +M[3][3]*V[3] ]
+
 def MxM(M1, M2) -> list:
     """ Return the result two matrix multiplication """
     rows = len(M2) #< If vector instead of matrix make a matrix
@@ -243,14 +249,14 @@ def MxM(M1, M2) -> list:
         M1 = [M1]
 
     if cols == rows:
-        rows = len(M1)
-        cols = len(M2[0])
+        rows = len(M1)    #< Rows in M1
+        cols = len(M2[0]) #< Columns in M2
         O = zeros(rows, cols) #< The output
         for r in range(0,rows):
             row = getRow(M1, r)
             for c in range(0, cols):
-                col = getCol(M2, c)
-                O[r][c] = VxV(row, col)
+                col = getCol(M2, c) #< col is a row vector
+                O[r][c] = VxV(row[0:len(col), col)
         return O
     else:
         return [0]
@@ -367,6 +373,11 @@ def LU(M) -> list:
             U[i] = addV(tmpRow2, tmpRow1)
         M = copy.copy(U)
     return (L, U)
+
+def copyIntoMatrix(M, S, rs=0, cs=0) -> None:
+    for ri, row in enumerate(S):
+        for ci, val in enumerate(row):
+            self.state[rs+ri][cs+ci] = val
 
 if __name__ == "__main__":
 #    M = [[1,2,3,4],
