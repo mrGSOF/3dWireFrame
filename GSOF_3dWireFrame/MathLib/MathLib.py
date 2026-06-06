@@ -371,10 +371,11 @@ def LU(M) -> list:
         M = copy.copy(U)
     return (L, U)
 
-def copyIntoMatrix(M, S, rs=0, cs=0) -> list:
-    for ri, row in enumerate(S):
-        for ci, val in enumerate(row):
-            M[rs+ri][cs+ci] = val
+def copyIntoMatrix(M, S, rs=0, cs=0, rn=3, cn=3) -> list:
+    for ri in range(0,rn):
+        row = S[ri]
+        for ci in range(0, cn):
+            M[rs+ri][cs+ci] = row[ci]
     return M
 
 if __name__ == "__main__":
