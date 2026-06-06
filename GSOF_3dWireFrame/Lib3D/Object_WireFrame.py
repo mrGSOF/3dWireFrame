@@ -23,7 +23,7 @@ class Object_wireFrame(Object_base):
     
     def update(self) -> None:
         self.newPoints = L.transform(points=self.points, M=self.state)
-        self.update = True
+        self.stateTouched = True
 
     def getLines(self) -> list:
         if not self.isUpdated():

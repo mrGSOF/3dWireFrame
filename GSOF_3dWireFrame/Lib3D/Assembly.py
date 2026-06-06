@@ -1,6 +1,6 @@
 from GSOF_3dWireFrame.MathLib import MathLib as ML
 from GSOF_3dWireFrame.Lib3D import Lib3D as L
-from GSOF_3dWireFrame.Lib3D.Pbject_base import Object_base
+from GSOF_3dWireFrame.Lib3D.Object_base import Object_base
 
 class Assembly(Object_base):
     """A new frame of reference with collection of other assemblies or objects"""
@@ -8,9 +8,9 @@ class Assembly(Object_base):
                  objects=[],    #< Objects in assembly  
                  connections=[] #< Connections between objects (for flexable objects)
                  ):
-        super().__init__()
         self.objects = objects
         self.connections = connections
+        super().__init__()
 
     def reset(self, all=True):
         """Reset current state and all objects (optional)"""
@@ -47,7 +47,7 @@ class Assembly(Object_base):
             [obj0, p0], [obj1, p1] = between
             fromPnt = self.objects[obj0][p0]
             toPnt   = self.objects[obj1][p1]
-            lines += [L.Line(fromPnt, toPnt]
+            lines += [L.Line(fromPnt, toPnt)]
         return lines
 
     def update(self):
@@ -56,4 +56,4 @@ class Assembly(Object_base):
             if not self.isUpdated():
                 obj.transform(transMatrix=self.state)
             obj.update()
-        self.updated = True
+        self.stateTouched = True

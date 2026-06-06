@@ -9,8 +9,8 @@ class WireFrame():
     def draw(self, obj, color=None) -> None:
         ###  ###
         for line in obj.getLines():
-            p0 = self.camera(line.p0)
-            p1 = self.camera(line.p1)
+            p0 = self.camera(line.points[0])
+            p1 = self.camera(line.points[1])
             if (p0[2] > self.f) or (p1[2] > self.f): #Skip lines in the back of the viewer
                 lcolor = color
                 if lcolor == None:

@@ -10,7 +10,7 @@ class Object_base():
     def reset(self, all=True):
         """Reset current state to original"""
         self.state = self.getOrigin() #< 4x4 matrix to store the currect state
-        self.updated = False
+        self.stateTouched = True
         return self
 
     def setOrigin(self, newState=None):
@@ -19,7 +19,6 @@ class Object_base():
         if newState == None:
             newState = self.stateOrigin
         self.stateOrigin = copy.deepcopy(newState)
-        self.update = False
         return self
 
     def getOrigin(self) -> list:
@@ -50,25 +49,21 @@ class Object_base():
         self.state[0][0] *= scale[0]
         self.state[1][1] *= scale[1]
         self.state[2][2] *= scale[2]
-        self.update = False
+        self.stateTouched = True
         return self
     
     def copyDcmIntoState(self, dcm: list) -> None:
         #self.state = ML.copyIntoMatrix(self.state, dcm, rs=0, cs=0)
-        print(dcm)
         for ri, row in enumerate(dcm):
-            print(row)
             for ci, val in enumerate(row):
                 self.state[ri][ci] = val
 
     def rotate(self, x: float, y: float, z: float, dcm: list=None):
         """Apply rotation to curent state"""
-        print(dcm)
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
-        print(dcm)
         self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
-        self.stateTouched = False
+        self.stateTouched = True
         return self
 
     def translate(self, x, y, z):
@@ -76,7 +71,7 @@ class Object_base():
         self.state[0][3] += x
         self.state[1][3] += y
         self.state[2][3] += z
-        self.update = False
+        self.stateTouched = True
         return self
 
     def transform(self,
@@ -93,14 +88,14 @@ class Object_base():
             .translate(translate)
         else:
             self.state = L.updateTransformationMatrix(self.state, transMatrix)
-        self.update = False
+        self.stateTouched = True
         return self
 
     def isUpdated(self) -> bool:
-        return bool(self._updated)
+        return not bool(self.stateTouched)
 
     def update(self) -> None:
-        self.update = True
+        self.stateTouched = False
 
     def getLines(self) -> list:
         """Return all lines of object"""

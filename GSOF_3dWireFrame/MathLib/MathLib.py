@@ -248,18 +248,15 @@ def MxM(M1, M2) -> list:
         cols = len(M1)
         M1 = [M1]
 
-    if cols == rows:
-        rows = len(M1)    #< Rows in M1
-        cols = len(M2[0]) #< Columns in M2
-        O = zeros(rows, cols) #< The output
-        for r in range(0,rows):
-            row = getRow(M1, r)
-            for c in range(0, cols):
-                col = getCol(M2, c) #< col is a row vector
-                O[r][c] = VxV(row[0:len(col)], col)
-        return O
-    else:
-        return [0]
+    rows = len(M1)    #< Rows in M1
+    cols = len(M2[0]) #< Columns in M2
+    O = zeros(rows, cols) #< The output
+    for r in range(0,rows):
+        row = getRow(M1, r)
+        for c in range(0, cols):
+            col = getCol(M2, c) #< col is a row vector
+            O[r][c] = VxV(row[0:len(col)], col)
+    return O
 
 def add_V2(V1, V2) -> list:
     """ Return the result of 2D vector addition """

@@ -80,10 +80,10 @@ def getTransformMatrix(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0)) -> list
     return M
 
 def updateTransformationMatrix(oldT, newT) -> list:
-    M = ML.copyIntoMatrix(oldT, ML.MxM(oldT[0:2], newT[0:3]), rs=0, cs=0)
-    M[0][3] += newT[0] #< Add translation
-    M[1][3] += newT[1]
-    M[2][3] += newT[2]
+    M = ML.copyIntoMatrix(oldT, ML.MxM(oldT[0:3], newT[0:3]), rs=0, cs=0)
+    M[0][3] += newT[0][3] #< Add translation
+    M[1][3] += newT[1][3]
+    M[2][3] += newT[2][3]
     M[3][3] = 1        #< Just to make sure
     return M
 
@@ -115,7 +115,7 @@ def _update(points, transformation) -> list:
     newPoints = [None]*len(points)
     for i, point in enumerate(points):
         point += [1] #< Add translation dimension
-        newPoints[i] = (ML.MxV(point, transformation))[0:3]
+        newPoints[i] = (ML.MxV(transformation, point))[0:3]
     return newPoints
 
 def calcLines(points, connections, color=(0,0,0)) -> list:
