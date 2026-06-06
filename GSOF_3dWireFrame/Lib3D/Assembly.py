@@ -54,6 +54,6 @@ class Assembly(Object_base):
         """Update the coordinates of all assembly and object"""
         for obj in self.objects:
             if not self.isUpdated():
-                obj.transform(transMatrix=self.state)
+                obj.transform(transMatrix=self.state, reverse=True)
             obj.update()
         self.stateTouched = True

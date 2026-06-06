@@ -46,9 +46,11 @@ class Object_base():
         """Apply scaling to curent state"""
         if not isinstance(scale, (list, tuple)):
             scale = (scale,)*3
-        self.state[0][0] *= scale[0]
-        self.state[1][1] *= scale[1]
-        self.state[2][2] *= scale[2]
+        scaleM = ML.I(4)
+        scaleM[0][0] = scale[0]
+        scaleM[1][1] = scale[1]
+        scaleM[2][2] = scale[2]
+        self.state = ML.MxM(self.state, scaleM)
         self.stateTouched = True
         return self
     
@@ -78,7 +80,8 @@ class Object_base():
                   scale: list=(1,1,1),
                   rotate: list=(0,0,0),
                   translate: list=(0,0,0),
-                  transMatrix: list=None
+                  transMatrix: list=None,
+                  reverse=False
                   ):
         """Apply transformation to curent state"""
         if transMatrix == None:
@@ -87,9 +90,7 @@ class Object_base():
             .rotate(rotate)\
             .translate(translate)
         else:
-#            print("use bfr: ", self.state[0:3])
-            self.state = L.updateTransformationMatrix(self.state, transMatrix)
-#            print("use aft: ", self.state[0:3])
+            self.state = L.updateTransformationMatrix(self.state, transMatrix, reverse)
         self.stateTouched = True
         return self
 

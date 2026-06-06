@@ -31,9 +31,9 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    net    = Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(-1000, 0, 500).scale(0.2).setOrigin()
-    sphere = Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(-1000, 0, 500).scale(0.2).setOrigin()
-    plane  = Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(0.02).setOrigin()
+    net    = Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(-100, -100, 0).scale(0.2).setOrigin()
+    sphere = Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(-100, 0, 500).scale(0.2).setOrigin()
+    plane  = Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(2.0).setOrigin()
     world  = Assembly(objects = (
         net,
         plane,
@@ -64,7 +64,7 @@ if __name__ == "__main__":
         world.rotate(x=camAngX_r,y=camAngY_r,z=0)
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, origin="arithCenter")
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0, origin="minMaxCenter")
-        world.translate(x=0,y=0,z=-1000)
+        world.translate(x=0,y=0,z=-1500)
 
         ### Draw 3D world
         clearScreen(screen, WHITE)
