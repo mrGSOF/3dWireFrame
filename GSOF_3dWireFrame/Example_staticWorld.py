@@ -31,9 +31,9 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    net    = Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(-100, -100, 0).scale(0.2).setOrigin()
-    sphere = Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).translate(-100, 0, 500).scale(0.2).setOrigin()
-    plane  = Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).rotate(-PI/2,0,0).scale(2.0).setOrigin()
+    net    = Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).scale(0.2).translate(0, 0, 0).setOrigin()
+    sphere = Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).scale(0.1).translate(125, 150, 500).setOrigin() #< More up and right to the center of the net 
+    plane  = Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).scale(1.0).translate(160, 90, 250).rotate(-PI/2,0,0).setOrigin()
     world  = Assembly(objects = (
         net,
         plane,

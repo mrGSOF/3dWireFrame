@@ -80,8 +80,7 @@ class Object_base():
                   scale: list=(1,1,1),
                   rotate: list=(0,0,0),
                   translate: list=(0,0,0),
-                  transMatrix: list=None,
-                  reverse=False
+                  transMatrix: list=None
                   ):
         """Apply transformation to curent state"""
         if transMatrix == None:
@@ -90,7 +89,7 @@ class Object_base():
             .rotate(rotate)\
             .translate(translate)
         else:
-            self.state = L.updateTransformationMatrix(self.state, transMatrix, reverse)
+            self.state = L.updateTransformationMatrix(self.state, transMatrix)
         self.stateTouched = True
         return self
 
