@@ -53,10 +53,26 @@ def scale(points, _scale) -> list:
         newPoints[i] = scalePoint(point, _scale, dim)
     return newPoints
 
+def getRotationMatrix(x=0, y=0, z=0) -> list:
+    """Return the proper rotation matrix for our coordinate system"""
+    return ML.DCM_YXZ(y, x, z) #< the proper rotation order for our coordinate system
+
+def getTransformMatrix(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0)) -> list:
+    """Return the transformation matrix"""
+    M = ML.copyIntoMatrix(ML.zeros(4,4), getRotationMatrix(*_rotate))
+    M[0][3] = _translate[0] #< Add translation
+    M[1][3] = _translate[1]
+    M[2][3] = _translate[2]
+    M[3][3] = 1
+    M[0][0] *= _scale[0] #< Add scaling
+    M[1][1] *= _scale[1]
+    M[2][2] *= _scale[2]
+    return M
+
 def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
     newPoints = [None]*len(points)
     if dcm == None:
-        dcm = ML.DCM_YXZ(y, x, z) #< This is the proper rotation order for our coordinate system
+        dcm = getRotationMatrix(y, x, z)
 
     for i, point in enumerate(points):
         newPoints[i] = ML.MxV(dcm, point)
@@ -69,25 +85,21 @@ def translate(points, x=0, y=0, z=0) -> list:
         newPoints[i] = ML.addV(point, T)
     return newPoints
 
-def transform(points, _scale, _rotate, _translate) -> list:
-    points = scale(points, _scale)
-    points = rotate(points, *_rotate)
-    points = translate(points, *_translate)
-    return points
+def transform(points, _scale=(1,1,1), _rotate=(0,0,0), _translate=(0,0,0), M=None) -> list:
+    if M == None:
+        M = getTransformMatrix(_scale, _rotate, _translate)
+    return update(points, M)
+##    points = scale(points, _scale) #< Inefficiant calculation
+##    points = rotate(points, *_rotate)
+##    return translate(points, *_translate)
 
 def update(points, transformation) -> list:
     newPoints = [None]*len(points)
     for i, point in enumerate(points):
-        newPoints[i] = (ML.addV(point +[1], transformation))[0:3]
+        point += [1] #< Add translation dimension
+        newPoints[i] = (ML.MxV(point, transformation))[0:3]
     return newPoints
 
-def updateTransformationMatrix(T1, T2) -> list:
-    ML.copyIntoMatrix(T1, ML.MxM(T1[0:3], T2[0:3])) #< Add rotation and scale
-    T1[0] += T2[0] #< Add translation
-    T1[1] += T2[1]
-    T1[2] += T2[2]
-    T1[3] = 1
-    return T1
 
 def calcLines(points, connections, color=(0,0,0)) -> list:
     lines = [0]*len(connections)
