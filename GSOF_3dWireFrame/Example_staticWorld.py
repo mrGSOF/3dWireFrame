@@ -1,5 +1,5 @@
 import pygame, math
-from Lib3D.Object_WireFrame import Object_wireFrame
+from Lib3D.Object_WireFrame import Object_wireFrame as Object
 from Lib3D.Object_base import Object_base
 from Lib3D.Assembly import Assembly
 from Lib3D import WireFrame_display as DISP
@@ -31,14 +31,38 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
     
 if __name__ == "__main__":
-    net    = Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).scale(0.2).translate(0, 0, 0).setOrigin()
-    sphere = Object_wireFrame(obj=Objects.sphere(500, 25, color=(255,0,0))).scale(0.1).translate(125, 150, 500).setOrigin() #< More up and right to the center of the net 
-    plane  = Object_wireFrame(filename="./objects/F16.stl", color=(0,0,255)).scale(1.0).translate(160, 90, 250).rotate(-PI/2,0,0).setOrigin()
+    ### 1. Build the ground
+    net    = Object(obj=Objects.net(25,20), color=(0,100,0), name="NET")\
+             .setCenter(pos=(0,0,0), rotate=(0, PI/2, 0), scale=0.2 )
+    axis1 = Object(filename="./objects/axis.json", color=(10,10,10), name="WorldAxis" )\
+       .scale(100.0)\
+       .setOrigin()
+    ground = Assembly(objects=(net, axis1), name="Ground").translate(-200, 0, 0).setOrigin()    
+
+    ### 2. Build the sun
+    sun = Object(obj=Objects.sphere(500, 15, color=(225,220,50)), name="SUN")
+    sun.setCenter(scale=0.15, rotate=(0,PI/2,0))
+    sun.translate(0, 250, 300)  #< More up (Y) and forward (Z) to the center of the net 
+    sun.setOrigin()
+
+    ### 3. Build the plane
+    axis2  = Object(
+       filename="./objects/axis.json", color=(10,10,10 ))\
+       .scale(100.0)\
+       .setOrigin()
+    f16  = Object(filename="./objects/F16.stl", color=(0,0,255), name="F16")\
+              .setCenter(scale=1.0, rotate=(-PI/2,0,0), method="arithCenter")
+    plane  = Assembly(objects=[f16, axis2], name="Plane")\
+             .rotate(0.5*-3.14/2,0,0)\
+             .translate(0,250,0)\
+             .setOrigin()
+
+    ### 4. Build the world
     world  = Assembly(objects = (
-        net,
+        ground,
         plane,
-        sphere,
-        ))
+        sun,
+        ), name="World")
 
     pygame.init()
     clock = pygame.time.Clock()
@@ -62,9 +86,9 @@ if __name__ == "__main__":
         world.reset()
         #world.rotate(x=1.8,y=3.14,z=0.3)
         world.rotate(x=camAngX_r,y=camAngY_r,z=0)
-        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, origin="arithCenter")
-        #world.rotate(x=camAngX_r,y=camAngY_r,z=0, origin="minMaxCenter")
-        world.translate(x=0,y=0,z=-1500)
+        #world.rotate(x=camAngX_r,y=camAngY_r,z=0)
+        f16.rotate(0, camAngY_r*4, 0)
+        world.translate(x=0,y=0,z=-1000)
 
         ### Draw 3D world
         clearScreen(screen, WHITE)

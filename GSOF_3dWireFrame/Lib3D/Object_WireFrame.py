@@ -42,9 +42,8 @@ class Object_wireFrame(Object_base):
                   method=None
                   ):
         """Move all original points to the new location than rotate and scale"""
+        ### Find new center and translate all points
         center = super()._findCenter(self.points, method)
-        print(center)
-        ### Move all points
         translate = (-(pos[0]+center[0]), -(pos[1]+center[1]), -(pos[2]+center[2]))
         if True:
             self.points = L.translate(self.points, *translate)
