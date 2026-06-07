@@ -50,11 +50,17 @@ class Assembly(Object_base):
             lines += obj.getLines()
 
         ### Lines between objects 
+        #print("\n", self.name +":") if len(self.connections) > 0 else None
         for between in self.connections:
             [obj0, p0], [obj1, p1] = between
-            fromPnt = self.objects[obj0][p0]
-            toPnt   = self.objects[obj1][p1]
+            fromPnt = self.objects[obj0].newPoints[p0]
+            toPnt   = self.objects[obj1].newPoints[p1]
             lines += [L.Line(fromPnt, toPnt)]
+##            if False:
+##                print("CON: ", obj0, p0, obj1, p1)
+##                print(self.objects[obj0].name, self.objects[obj1].name)
+##                print(len(fromPnt), len(toPnt))
+##                print(fromPnt, toPnt)
         return lines
 
     def update(self):
