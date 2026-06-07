@@ -9,18 +9,17 @@ class Object_base():
 
     def reset(self, all=True):
         """Reset current state to original"""
-        self.state = copy.deepcopy(self.getOrigin()) #< 4x4 matrix to store the currect state
+        self.state = self.getOrigin() #< 4x4 matrix to store the currect state
         self.stateTouched = True
         return self
 
     def setOrigin(self, newState=None):
         """Set current state as the new original state"""
-        
         if newState == None:
             newState = self.state
         self.stateOrigin = copy.deepcopy(newState)
         return self
-
+    
     def getOrigin(self) -> list:
         """Get the original state"""
         return copy.deepcopy(self.stateOrigin)
@@ -37,8 +36,8 @@ class Object_base():
             return L.findMinMaxCenter(points)
 
         elif method == None:
-            return self.getOrigin()
-
+            return (0,0,0)
+        
         else:
             return None
 
@@ -86,8 +85,8 @@ class Object_base():
         if transMatrix == None:
             self\
             .scale(scale)\
-            .rotate(rotate)\
-            .translate(translate)
+            .rotate(*rotate)\
+            .translate(*translate)
         else:
             self.state = L.updateTransformationMatrix(self.state, transMatrix)
         self.stateTouched = True
