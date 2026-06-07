@@ -59,7 +59,6 @@ class Assembly(Object_base):
 ##            if False:
 ##                print("CON: ", obj0, p0, obj1, p1)
 ##                print(self.objects[obj0].name, self.objects[obj1].name)
-##                print(len(fromPnt), len(toPnt))
 ##                print(fromPnt, toPnt)
         return lines
 
