@@ -70,14 +70,16 @@ def getRotationMatrix(x=0, y=0, z=0) -> list:
 
 def getTransformMatrix(scale=(1,1,1), rotate=(0,0,0), translate=(0,0,0)) -> list:
     """Return the transformation matrix"""
-    M = getRotationMatrix(*rotate) + [0,0,0,1]
-    M[0][0] *= scale[0]    #< Add scaling
-    M[1][1] *= scale[1]
-    M[2][2] *= scale[2]
+    M = getRotationMatrix(*rotate)
+    scaleM = ML.I(3)
+    scaleM[0][0] = scale[0]
+    scaleM[1][1] = scale[1]
+    scaleM[2][2] = scale[2]
+    M = ML.MxM(M, scaleM)
     M[0] += [translate[0]] #< Add translation
     M[1] += [translate[1]]
     M[2] += [translate[2]]
-    return M
+    return M +[[0,0,0,1]]    #< Add last row and return
 
 def updateTransformationMatrix(oldT, newT) -> list:
     return ML.MxM(newT, oldT)
