@@ -1,15 +1,19 @@
 # 3dWireFrame
 Simple and basic 3D Wire-Frame drawing program.
-Loads .stl or .json object files.
-Supports containers.
-Supports line connection between objects (visual links).
-
-![alt text](./Documentation/Screenshot01.png "Screenshot")
-
-![alt text](./Documentation/Screenshot02.png "Screenshot")
+- Loads .stl or .json object files.
+- Supports assembly containers to manipulate object in their own frame of reference.
+- Supports line connection between objects in assembly (visual links).
+- Uses 4x4 transformation matrices under the hood.
+- Uses PyGame to line drawing only.
 
 ## Running instructions
 
 - Clone
 - Install requirements `pip install -r requirements.txt`
-- run `main.py`
+- run `pip install .`
+- Open and run one of the code examples (e.g. `Example_staticWorld.py`)
+
+![alt text](./Documentation/3DWireFrame_interactive.gif "Animation")
+
+![alt text](./Documentation/3DWireFrame_flex.gif "Screenshot")
+
