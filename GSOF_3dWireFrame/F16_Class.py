@@ -9,8 +9,9 @@
 
 from math import pi
 try:
-   from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
-   from GSOF_3dWireFrame.Lib3D import Object_base as OB
+   from GSOF_3dWireFrame.Lib3D.Object_WireFrame import Object_wireFrame as Object
+   from GSOF_3dWireFrame.Lib3D.Object_base import Object_base
+   from GSOF_3dWireFrame.Lib3D.Assembly import Assembly
    from GSOF_3dWireFrame.Lib3D import Objects
    _3D_active = True
 except:
@@ -18,67 +19,63 @@ except:
    print("GSOF_Wireframe3D module isn't installed")
 
 degToRad = pi/180
-class F16_View(OB.Object_container):
+#YELLOW = (255,255,140)
+YELLOW = (125,125,0)
+BLACK  = (0,0,0)
+RED    = (255,0,0)
+GREEN  = (0,170,0)
+BLUE   = (0,0,255)
+GRAY   = (50,50,50)
+class F16_View(Assembly):
     """Constructs the gauges screen"""
     def __init__(self, folder='./'):
         self.time = 0.0
-        axis  = OWF.Object_wireFrame(
-           filename="%s/objects/axis.json"%folder, color=(10,10,10 ))\
-           .translate(V=(0, 0, 0))\
-           .scale(1.5, initShape=True)
+        axis  = Object(
+           filename="%s/objects/axis.json"%folder, color=GREEN)\
+           .scale(50.0)\
+           .translate(0, 0, 150)\
+           .setOrigin()
 
-        self.plane = OWF.Object_wireFrame(
-            filename="%s/objects/f16.stl"%folder, color=( 0, 0,255))\
-            .rotate(x=0, y=0, z=0)
-        self.plane.setOrigin(
-            origin=self.plane.getOrigin(origin="arithCenter") )\
-            .scale(0.015)\
-            .rotate(x=0, y=0, z=0)\
-            .translate(V=(0, 0, 0), initShape=True)
+        self.plane = Object(
+            filename="%s/objects/f16.stl"%folder, color=BLUE, name="F16")\
+            .setCenter(scale=1.0, method="arithCenter")
         
-        plume = OWF.Object_wireFrame(
-           filename="%s/objects/Plume.json"%folder, color=( 255, 0,0))\
-           .scale(0.5)\
-           .rotate(x=0, y=180*degToRad, z=0)\
-           .translate(V=(0, 0, -130), initShape=True)
-                       
-        self.plume = OB.Object_container(objList=(plume,))
+        self.plume = objects=Object(
+           filename="%s/objects/Plume.json"%folder, color=RED)\
+           .setCenter(scale=30, rotate=(0, 180*degToRad, 0))
+        plume = Assembly(objects=(self.plume,))   
+        plume.translate(0, 0, -90).setOrigin()
         
-        nw = OWF.Object_wireFrame(
-           filename="%s/objects/LandingGear.json"%folder, color=( 0,0,0))\
-           .scale(0.1)\
-           .translate(V=(0, -45, 120), initShape=True)
-        self.nwow = OWF.Object_wireFrame(
-           filename="%s/objects/Spark.json"%folder, color=( 255,0,255))\
-           .scale(0.1, initShape=True)#\
-           #.translate(V=(0, -48, 120), initShape=True) #< Translation is done in manipulation function
-        rw = OWF.Object_wireFrame(
-           filename="%s/objects/LandingGear.json"%folder, color=( 0,0,0))\
-           .scale(0.1)\
-           .rotate(x=0, y=0, z=-degToRad*10)\
-           .translate(V=(-15, -45, 15), initShape=True)
-        self.rwow = OWF.Object_wireFrame(
-           filename="%s/objects/Spark.json"%folder, color=( 255,255,0))\
-           .scale(0.1, initShape=True)#\
-           #.translate(V=(-15, -48, 15), initShape=True) #< Translation is done in manipulation function
-        lw = OWF.Object_wireFrame(
-           filename="%s/objects/LandingGear.json"%folder, color=( 0,0,0))\
-           .scale(0.1)\
-           .rotate(x=0, y=0, z=degToRad*10)\
-           .translate(V=(15, -45, 15), initShape=True)
-        self.lwow = OWF.Object_wireFrame(
-           filename="%s/objects/Spark.json"%folder, color=( 255,255,0))\
-           .scale(0.1, initShape=True)#\
-           #.translate(V=(15, -48, 15), initShape=True) #< Translation is done in manipulation function
+        self.nw = Object(
+           filename="%s/objects/LandingGear.json"%folder, color=BLACK, name="NW")
+        self.nwow = Object(
+           filename="%s/objects/Spark.json"%folder, color=YELLOW, name="NWOW")
+        nw = Assembly(objects=(self.nw, self.nwow), name="NW-Assy")\
+           .translate(0, -2, 0).scale(8).translate(0, -30, 80).setOrigin()           
 
-        self.gears = OB.Object_container(objList=(nw, self.nwow,
-                                                  rw, self.rwow,
-                                                  lw, self.lwow
-                                                  ))
-        
-        super().__init__(objList=(self.plane, self.plume, self.gears))
+        self.rw = Object(
+           filename="%s/objects/LandingGear.json"%folder, color=BLACK, name="RW")
+        self.rwow = Object(
+           filename="%s/objects/Spark.json"%folder, color=YELLOW)
+        rw = Assembly(objects=(self.rw, self.rwow), name="RW-Assy")\
+           .translate(0, -2, 0).rotate(x=0, y=0, z=-degToRad*15)\
+           .scale(8).translate(-18, -30, 0).setOrigin()           
 
-    def update(self, time, fcs=None, eng=None, ins=None, wow=None):
+        self.lw = Object(
+           filename="%s/objects/LandingGear.json"%folder, color=BLACK, name="LW")
+        self.lwow = Object(
+           filename="%s/objects/Spark.json"%folder, color=YELLOW)
+        lw = Assembly(objects=(self.lw, self.lwow), name="LW-Assy")\
+           .translate(0, -2, 0).rotate(x=0, y=0, z=degToRad*15)\
+           .scale(8).translate(18, -30, 0).setOrigin()           
+
+        self.gears = Assembly(objects=(nw,
+                                       rw,
+                                       lw
+                                       ))
+        super().__init__(objects=(axis, self.plane, plume, self.gears))
+
+    def setControls(self, time, fcs=None, eng=None, ins=None, wow=None):
         """Update all elements"""
         self.time += 0.1
         if eng != None:
@@ -114,6 +111,10 @@ class F16_View(OB.Object_container):
     def setExahustPlume(self, thrust_lbf) -> None:
         thrustMAX = 6360
         plume = thrust_lbf/thrustMAX
+        if plume > 1:
+            plume = 1
+        elif plume < 0:
+            plume = 0
         plumeColor = (255, 255*(1-plume), 255*(1-plume))
         self.plume.rotate(x=0, y=0, z=self.time*plume)
         self.plume.scale(plume).color = plumeColor
@@ -130,7 +131,13 @@ class F16_View(OB.Object_container):
     def setWOW(self, leftWow, rightWow, noseWow) -> None:
         time = int(self.time*10)
         blink = bool(time&0b010)
-        self.nwow.rotate(x=0, y=0, z=4*self.time).translate(V=(0, -48, 120)).scale(int(noseWow and blink))
-        self.lwow.rotate(x=0, y=0, z=4*self.time).translate(V=(-15, -48, 15)).scale(int(leftWow and blink))
-        self.rwow.rotate(x=0, y=0, z=4*self.time).translate(V=(15, -48, 15)).scale(int(rightWow and blink))
+        self.nwow.rotate(x=0, y=0, z=4*self.time)\
+                 .scale(int(noseWow and blink))
+                 #.translate(0, -48, 120)\
+        self.lwow.rotate(x=0, y=0, z=4*self.time)\
+                 .scale(int(leftWow and blink))
+                 #.translate(-15, -48, 15)\
+        self.rwow.rotate(x=0, y=0, z=4*self.time)\
+                 .scale(int(rightWow and blink))
+                 #.translate(15, -48, 15)\
 

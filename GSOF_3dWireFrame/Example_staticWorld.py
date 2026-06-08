@@ -74,10 +74,10 @@ if __name__ == "__main__":
     t = 0.0
     camAngX_r = 0.0
     camAngY_r = 0.0
-    roofAng_r = 0.0
-    houseAng_r = 0.0
+    f16Ang_r  = 0.0
+    useMouse = True
+    
     run = True
-
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         #world.rotate(x=1.8,y=3.14,z=0.3)
         world.rotate(x=camAngX_r,y=camAngY_r,z=0)
         #world.rotate(x=camAngX_r,y=camAngY_r,z=0)
-        f16.rotate(0, camAngY_r*4, 0)
+        f16.rotate(0, f16Ang_r, 0)
         world.translate(x=0,y=0,z=-1000)
 
         ### Draw 3D world
@@ -95,8 +95,14 @@ if __name__ == "__main__":
         wireframe.draw(world)
         
         ### Wait for next step time
-        camAngX_r += 0.5*dt
-        camAngY_r += 1*dt
+        if useMouse:
+            (mPosX, mPosY) = pygame.mouse.get_pos()
+            camAngY_r = 0.01*(mPosX -SCREEN_WIDTH/2)
+            camAngX_r = 0.01*(mPosY -SCREEN_HEIGHT/2)
+        else:
+            camAngX_r += 0.5*dt
+            camAngY_r += 1*dt
+        f16Ang_r += 4*dt
         t += dt
         clock.tick(30)
         
