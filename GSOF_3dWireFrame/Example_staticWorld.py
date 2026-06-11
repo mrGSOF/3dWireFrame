@@ -33,7 +33,7 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
 if __name__ == "__main__":
     ### 1. Build the ground
     net    = Object(obj=Objects.net(25,20), color=(0,100,0), name="NET")\
-             .setCenter(pos=(0,0,0), rotate=(0, PI/2, 0), scale=0.2 )
+             .setCenter(pos=(0,0,0), rotate=(PI/2, 0, 0), scale=0.2 )
     axis1 = Object(filename="./objects/axis.json", color=(10,10,10), name="WorldAxis" )\
        .scale(100.0)\
        .setOrigin()
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     ### 2. Build the sun
     sun = Object(obj=Objects.sphere(500, 15, color=(225,220,50)), name="SUN")
-    sun.setCenter(scale=0.15, rotate=(0,PI/2,0))
+    sun.setCenter(scale=0.15, rotate=(PI/2,0,0))
     sun.translate(0, 250, 300)  #< More up (Y) and forward (Z) to the center of the net 
     sun.setOrigin()
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
        .scale(100.0)\
        .setOrigin()
     f16  = Object(filename="./objects/F16.stl", color=(0,0,255), name="F16")\
-              .setCenter(scale=1.0, rotate=(-PI/2,0,0), method="arithCenter")
+              .setCenter(scale=1.0, rotate=(0,-PI/2,0), method="arithCenter")
     plane  = Assembly(objects=[f16, axis2], name="Plane")\
              .rotate(0.5*-3.14/2,0,0)\
              .translate(0,250,0)\

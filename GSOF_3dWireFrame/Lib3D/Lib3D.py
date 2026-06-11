@@ -87,7 +87,7 @@ def updateTransformationMatrix(oldT, newT) -> list:
 def rotate(points, x=0, y=0, z=0, dcm=None) -> list:
     newPoints = [None]*len(points)
     if dcm == None:
-        dcm = getRotationMatrix(y, x, z)
+        dcm = getRotationMatrix(x, y, z)
 
     for i, point in enumerate(points):
         newPoints[i] = ML.MxV(dcm, point)

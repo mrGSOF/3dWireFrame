@@ -1,6 +1,6 @@
 import pygame
-from Lib3D import Object_WireFrame as OWF
-from Lib3D import Object_base as OB
+from Lib3D.Object_WireFrame import Object_wireFrame as Object
+from Lib3D.Assembly import Assembly
 from Lib3D import Objects
 from Lib3D import WireFrame_display as DISP
 from modules import Controls
@@ -21,8 +21,8 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
   
 if __name__ == "__main__":
-    house = OWF.Object_wireFrame(filename="./objects/house.json", color=(0,180,180)).scale(1.0, initShape=True)
-    world = OB.Object_container(objList = (
+    house = Object(filename="./objects/house.json", color=(0,180,180))
+    world = Assembly(objects = (
         house,
         ))
 
@@ -59,8 +59,8 @@ if __name__ == "__main__":
         
         clearScreen(screen, WHITE)
         world.reset()
-        world.translate(V=viewer.getPosition(), initShape=False)
-        world.rotate(*viewer.getAttitude(), initShape=False)
+        world.translate(*viewer.getPosition())
+        world.rotate(*viewer.getAttitude())
 
         ### Draw 3D world
         clearScreen(screen, WHITE)
