@@ -42,7 +42,7 @@ class F16_View(Assembly):
         
         self.plume = objects=Object(
            filename="%s/objects/Plume.json"%folder, color=RED)\
-           .setCenter(scale=30, rotate=(0, 180*degToRad, 0))
+           .setCenter(scale=30, rotate=(180*degToRad, 0, 0))
         plume = Assembly(objects=(self.plume,))   
         plume.translate(0, 0, -90).setOrigin()
         
