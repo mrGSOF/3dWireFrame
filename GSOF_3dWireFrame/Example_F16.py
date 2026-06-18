@@ -12,7 +12,7 @@ from Lib3D.Assembly import Assembly
 #from Lib3D.Object_base import Object_base
 from Lib3D import Objects
 from Lib3D import WireFrame_display as DISP
-from F16_Class import F16_View
+from F16_Class import F16_View, Commands, State 
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -20,36 +20,6 @@ WHITE = (255,255,255)
 BLUE = (220,220,255)
 BLACK = (0,0,0)
 PI = math.pi
-
-class Engine():
-    def __init__(self, thrust_lbf):
-        self.thrust_lbf = thrust_lbf
-
-class InertialNavigationSystem():
-    def __init__(self, azimuth_d, pitch_d, roll_d):
-        self.azimuth_d = azimuth_d
-        self.pitch_d   = pitch_d
-        self.roll_d    = roll_d
-
-class FlightSurfaces():
-    def __init__(self,
-                 leftAliron_d=0, rightAliron_d=0,
-                 leftElevator_d=0, rightElevator_d=0,
-                 rudder_d=0, speedbrake_d=0,
-                 gearDown_b=True):
-        self.lAliron_d   = leftAliron_d
-        self.rAliron_d   = rightAliron_d
-        self.lElevator_d = leftElevator_d
-        self.rElevator_d = rightElevator_d
-        self.rudder_d    = rudder_d
-        self.sb_d        = speedbrake_d
-        self.gearsDown   = gearDown_b
-
-class WeightOnWheels():
-    def __init__(self, left, right, nose):
-        self.left  = left
-        self.right = right
-        self.nose  = nose
 
 def drawWireFrame(screen, obj, color=None) -> None:
     for line in obj.getLines():
@@ -96,8 +66,10 @@ if __name__ == "__main__":
     t = 0.0
     camAngX_r = 0.0
     camAngY_r = 0.0
-    eng  = Engine(thrust_lbf=6000)
-    wow = WeightOnWheels(left=True, right=True, nose=True)
+    camAngZ_r = 0.0
+    commands  = Commands()
+    mPosZ = 0.0
+    state = State(thrust_lbf=6000)
     useMouse = True
 
     run = True
@@ -105,26 +77,44 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
               run = False
+        ### Wait for next step time
+        keys = pygame.key.get_pressed()
+        state.thrust_lbf  += (keys[pygame.K_q] -keys[pygame.K_a])*200
+        commands.gearsDown_b += keys[pygame.K_b] -keys[pygame.K_g]
+        commands.gearsDown_b = min(1, max(0,commands.gearsDown_b))
+        state.wowNose_b  = bool(keys[pygame.K_2])
+        state.wowLeft_b  = bool(keys[pygame.K_1])
+        state.wowRight_b = bool(keys[pygame.K_3])
+        print(state.wowLeft_b, state.wowNose_b, state.wowRight_b)
+
+        if useMouse:
+            (mPosX, mPosY) = pygame.mouse.get_pos()
+            mPosZ += (keys[pygame.K_z] -keys[pygame.K_x])*2
+            x = mPosX/SCREEN_WIDTH -0.5
+            y = mPosY/SCREEN_HEIGHT -0.5
+            z = mPosZ/360
+        else:
+            x += 0.5*dt
+            y += 1*dt
+            z = 0
+        commands.rudder_d = z*30
+        commands.leftAliron_d   = -25*x
+        commands.rightAliron_d  = 25*x
+        commands.leftElevator = 0.5*commands.leftAliron_d +25*y
+        commands.rightElevator = 0.5*commands.rightAliron_d  +25*y
+        camAngX_r = y*PI/2
+        camAngY_r = z*PI/2
+        camAngZ_r = x*PI/2
+
         world.reset()
-        f16.setControls(t, fcs=None, eng=eng, ins=None, wow=wow)
-        world.transform(rotate=(camAngX_r,camAngY_r,0), translate=(0,0,-1000))
+        f16.setControls(t, commands, state)
+        world.transform(rotate=(camAngX_r,camAngY_r,camAngZ_r), translate=(0,0,-1000))
 #        world.transform(rotate=(0.0*3.14, 0.0*3.14, 0), translate=(0,0,-80))
 
         ### Draw 3D world
         clearScreen(screen, BLUE)
         wireframe.draw(world)
         
-        ### Wait for next step time
-        keys = pygame.key.get_pressed()
-        eng.thrust_lbf += -(keys[pygame.K_1] - keys[pygame.K_2])*200
-        
-        if useMouse:
-            (mPosX, mPosY) = pygame.mouse.get_pos()
-            camAngY_r = 0.01*(mPosX -SCREEN_WIDTH/2)
-            camAngX_r = 0.01*(mPosY -SCREEN_HEIGHT/2)
-        else:
-            camAngX_r += 0.5*dt
-            camAngY_r += 1*dt
         t += dt
         clock.tick(30)
         
@@ -132,4 +122,3 @@ if __name__ == "__main__":
         pygame.display.flip()
 
     pygame.quit()
-    
