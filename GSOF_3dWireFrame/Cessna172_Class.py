@@ -96,7 +96,7 @@ class View(Assembly):
         self.rudder = Object(
            filename="%s/objects/Cessna 172/Rudder.stl"%folder, color=Colors.RED)\
             .setCenter(scale=1.0, method="arithCenter")\
-            .translate(0, 25, -290)\
+            .transform(rotate=(-0.3,0,0), translate=(0, 25, -290))\
             .setOrigin()
 
         super().__init__(objects=(axis, self.plane, self.propeller, self.gears, flaps, ailerons, elevators, self.rudder))
@@ -105,10 +105,32 @@ class View(Assembly):
         """Update all elements"""
         self.time += 1/fps
         self.propeller.rotate(x=0, y=0, z=self.time*self.rps*2*pi)
+    
+    def setRightFlapAngle(self, angle):
+        self.rightFlap.rotate(angle,0,0)
+    def setLeftFlapAngle(self, angle):
+        self.leftFlap.rotate(angle,0,0)
 
-    def setGearsDown(self, downCmd) -> None:
-        if downCmd == False:
-           self.gears.scale(0.0)
+    def setRightAileronAngle(self, angle):
+        self.rightAileron.rotate(angle,0,0)
+    def setLeftAileronAngle(self, angle):
+        self.leftAileron.rotate(angle,0,0)
+
+    def setRightElevatorAngle(self, angle):
+        self.rightElevator.rotate(angle,0,0)
+    def setLeftElevatorAngle(self, angle):
+        self.leftElevator.rotate(angle,0,0)
+
+    def setRudderAngle(self, angle):
+        self.rudder.rotate(0,angle,0)
+
+    def setGears(self, down=True):
+        if down:
+            self.setGearsDown()
         else:
-           self.gears.scale(1.0)
+            self.setGearsUp()
+    def setGearsDown(self) -> None:
+        self.gears.scale(0.0)
+    def setGearsUp(self) -> None:
+        self.gears.scale(1.0)
 

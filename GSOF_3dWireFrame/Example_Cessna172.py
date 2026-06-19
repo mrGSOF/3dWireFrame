@@ -67,9 +67,20 @@ if __name__ == "__main__":
             gearDown = True
         elif keys[pygame.K_g]:
             gearDown = False
-        cessna.setGearsDown(gearDown)
+        cessna.setGears(down=gearDown)
 
         rotateFromMouse(world)
+
+        cessna.setRightFlapAngle(1)
+        cessna.setLeftFlapAngle(1)
+
+        cessna.setRightAileronAngle(1)
+        cessna.setLeftAileronAngle(1)
+
+        cessna.setRightElevatorAngle(1)
+        cessna.setLeftElevatorAngle(1)
+
+        cessna.setRudderAngle(1)
 
         cessna.tick(fps=fps)
         wireframe.draw(world)
