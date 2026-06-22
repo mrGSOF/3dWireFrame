@@ -120,6 +120,17 @@ def DCM_XZY(a, b, c) -> list:
             [cc*sa*sb-ca*sc,   cb*sa,  ca*sb*sc      ]]
     return DCM
 
+def get_abc_XZY(dcm) -> list:
+    R32 = dcm[2][1]
+    R11 = dcm[0][0]
+    R12 = dcm[0][1]
+    R13 = dcm[0][2]
+    R22 = dcm[1][1]
+    a = math.atan(R32/R22)
+    b = math.asin(-R12)
+    c = math.atan(R13/R11)
+    return (a,b,c)
+
 def DCM_XYZ(a, b, c) -> list:
     """ a is around X, b is around Y, and c is around Z"""
     ca = math.cos(a)
@@ -133,6 +144,17 @@ def DCM_XYZ(a, b, c) -> list:
             [ca*sc+sa*sb*cc,  ca*cc-sa*sb*sc,  -sa*cb],
             [sa*sc-ca*sb*cc,  sa*cc+ca*sb*sc,   ca*cb]]
     return DCM
+
+def get_abc_XYZ(dcm) -> list:
+    R11 = dcm[0][0]
+    R12 = dcm[0][1]
+    R13 = dcm[0][2]
+    R23 = dcm[1][2]
+    R33 = dcm[2][2]
+    a = math.atan(-R23/R33)
+    b = math.asin(R13)
+    c = math.atan(-R12/R11)
+    return (a,b,c)
 
 def DCM_YXZ(a, b, c) -> list:
     """ a is around Y, b is around X, and c is around Z"""
@@ -148,6 +170,18 @@ def DCM_YXZ(a, b, c) -> list:
             [ca*sb*sc-cc*sa,  ca*cc*sb+sa*sc,   ca*cb]]
     return DCM
 
+def get_abc_YXZ(dcm) -> list:
+    R13 = dcm[0][2]
+    R21 = dcm[1][0]
+    R22 = dcm[1][1]
+    R23 = dcm[1][2]
+    R33 = dcm[2][2]
+    a = math.atan(R13/R33)
+    b = math.asin(-R23)
+    c = math.atan(R21/R22)
+    return (a,b,c)
+
+
 def DCM_YZX(a, b, c) -> list:
     """ a is around Y, b is around Z, and c is around X"""
     ca = math.cos(a)
@@ -161,6 +195,17 @@ def DCM_YZX(a, b, c) -> list:
             [  sb   ,     cb*cc,          -cb*sc    ],
             [-cb*sa , ca*sc+cc*sa*sb, ca*cc-sa*sb*sc]]
     return DCM
+
+def get_abc_YZX(dcm) -> list:
+    R31 = dcm[2][0]
+    R11 = dcm[0][0]
+    R21 = dcm[1][0]
+    R22 = dcm[1][1]
+    R23 = dcm[1][2]
+    a = math.atan(-R31/R11)
+    b = math.asin(R21)
+    c = math.atan(-R23/R22)
+    return (a,b,c)
 
 def DCM_ZYX(a, b, c) -> list:
     """ a is around Z, b is around Y, and c is around X"""
@@ -178,6 +223,17 @@ def DCM_ZYX(a, b, c) -> list:
             [ -sb,       cb*sc,          cb*cc    ]]
     return DCM
 
+def get_abc_ZYX(dcm) -> list:
+    R11 = dcm[0][0]
+    R21 = dcm[1][0]
+    R31 = dcm[2][0]
+    R32 = dcm[2][1]
+    R33 = dcm[2][2]
+    a = math.atan(R21/R11)
+    b = math.asin(-R31)
+    c = math.atan(R32/R33)
+    return (a,b,c)
+
 def DCM_ZXY(a, b, c) -> list:
     """ a is around Z, b is around X, and c is around Y"""
     ca = math.cos(a)
@@ -193,6 +249,17 @@ def DCM_ZXY(a, b, c) -> list:
             [sa*cb, sa*sb*sc+ca*cc, cc*sa*sb-ca*sc],
             [ -sb,       cb*sc,          cb*cc    ]]
     return DCM
+
+def get_abc_ZXY(dcm) -> list:
+    R12 = dcm[0][1]
+    R22 = dcm[1][1]
+    R31 = dcm[2][0]
+    R32 = dcm[2][1]
+    R33 = dcm[2][2]
+    a = math.atan(-R12/R22)
+    b = math.asin(R32)
+    c = math.atan(-R31/R33)
+    return (a,b,c)
 
 def MxV_2x2(M,V) -> list:
     """ Return the result of 2x2 matrix and 2D vector multiplication """
