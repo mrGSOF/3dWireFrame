@@ -111,12 +111,14 @@ def transform(points, _scale=(1,1,1), _rotate=(0,0,0), _translate=(0,0,0), M=Non
 def _update(points, transformation) -> list:
     newPoints = [None]*len(points)
     for i, point in enumerate(points):
+        if len(point) < 4:
+            point += [1] #< Add translation dimension
         point += [1] #< Add translation dimension
         newPoints[i] = (ML.MxV(transformation, point))[0:3]
     return newPoints
 
 def calcLines(points, connections, color=(0,0,0)) -> list:
-    lines = [0]*len(connections)
+    lines = [None]*len(connections)
     for i, connect in enumerate(connections):
         fromPnt, toPnt = connect
         p0 = points[fromPnt]
