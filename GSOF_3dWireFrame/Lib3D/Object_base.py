@@ -59,14 +59,21 @@ class Object_base():
             for ci, val in enumerate(row):
                 self.state[ri][ci] = val
 
-    def rotate(self, x: float, y: float, z: float, dcm: list=None):
+    def rotate(self, x: float, y: float, z: float, dcm: list=None, centerAt: list=None):
         """Apply rotation to current state"""
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
-        #self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
-        dcm[0] += [0]
-        dcm[1] += [0]
-        dcm[2] += [0]
+        if centerAt == None:
+            #self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+            dcm[0] += [0]
+            dcm[1] += [0]
+            dcm[2] += [0]
+        else:
+            tx, tz, tz = -centerAt[0],-centerAt[1],-centerAt[2]
+            r = dcm
+            dcm[0] += [tx*(1-r[0][0]) -r[0][1]*ty -r[0][2]*tz]
+            dcm[1] += [ty*(1-r[1][1]) -r[1][0]*tx -r[1][2]*tz]
+            dcm[2] += [tz*(1-r[2][2]) -r[2][0]*tx -r[2][1]*ty]
         dcm += [[0,0,0,1]]
         self.state = ML.MxM(dcm, self.state)
         self.stateTouched = True
