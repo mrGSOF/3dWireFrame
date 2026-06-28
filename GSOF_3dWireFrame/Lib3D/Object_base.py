@@ -60,7 +60,7 @@ class Object_base():
             for ci, val in enumerate(row):
                 self.state[ri][ci] = val
 
-    def rotate(self, x: float, y: float, z: float, dcm: list=None):
+    def rotate(self, x: float, y: float, z: float, dcm: list=None, centerAt: list=None):
         """Apply rotation to current state"""
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
