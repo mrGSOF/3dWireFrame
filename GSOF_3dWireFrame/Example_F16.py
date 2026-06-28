@@ -19,6 +19,8 @@ SCREEN_HEIGHT = 600
 WHITE = (255,255,255)
 BLUE = (220,220,255)
 BLACK = (0,0,0)
+RED = (255,0,0)
+GREEN = (0,255,0)
 PI = math.pi
 
 def drawWireFrame(screen, obj, color=None) -> None:
@@ -41,6 +43,7 @@ def newScreen(title="New", resX=SCREEN_WIDTH, resY=SCREEN_HEIGHT, color=WHITE):
     return screen
 
 if __name__ == "__main__":
+    import copy
     ground = Object_wireFrame(
        obj=Objects.net(25,25), color=(0,100,0))\
        .scale(0.2)\
@@ -50,11 +53,25 @@ if __name__ == "__main__":
 
     f16 = F16_View()\
           .scale(1.0)\
-          .translate(0, 0, 0)\
-          .rotate(0*3.14/2, 0*3.14/2, 0)\
-          .setOrigin()
+          .translate(100, 100, -100).setOrigin()
+    f16.plane.color = BLACK
 
-    world = Assembly(objects=(ground, f16))
+    rotateBy = (0*3.14/4, 1*3.14/8, 0)
+    f16_1 = copy.deepcopy(f16)
+    f16_1.rotate(*rotateBy, centerAt=(100,100,-100))\
+         .setOrigin()
+    f16_1.plane.color = RED
+
+    rotateBy = (0*3.14/4, -1*3.14/8, 0)
+    f16_2 = copy.deepcopy(f16)
+    f16_2.translate(-100, -100, 100)\
+          .rotate(*rotateBy)\
+          .translate(100, 100, -100)\
+          .translate(-100, 0, 100)\
+          .setOrigin()
+    f16_2.plane.color = GREEN
+
+    world = Assembly(objects=(ground, f16, f16_1, f16_2))
 
     pygame.init()
     clock = pygame.time.Clock()
@@ -102,14 +119,14 @@ if __name__ == "__main__":
         commands.rightAliron_d  = 25*x
         commands.leftElevator = 0.5*commands.leftAliron_d +25*y
         commands.rightElevator = 0.5*commands.rightAliron_d  +25*y
-        camAngX_r = y*PI/2
-        camAngY_r = z*PI/2
-        camAngZ_r = x*PI/2
+        camAngX_r = y*PI
+        camAngY_r = z*PI
+        camAngZ_r = x*PI
 
         world.reset()
         f16.setControls(t, commands, state)
         world.transform(rotate=(camAngX_r,camAngY_r,camAngZ_r), translate=(0,0,-1000))
-#        world.transform(rotate=(0.0*3.14, 0.0*3.14, 0), translate=(0,0,-80))
+        #world.transform(rotate=(3.14/2, 0.0*3.14, 0), translate=(0,0,-1000))
 
         ### Draw 3D world
         clearScreen(screen, BLUE)
