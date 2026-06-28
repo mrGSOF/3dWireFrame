@@ -5,11 +5,11 @@ from GSOF_3dWireFrame.Lib3D import Lib3D as L
 class Object_base():
     def __init__(self):
         self.stateOrigin = ML.I(4) #< 4x4 matrix to store the original state of scale, rotation and translations
-        self.reset()               #< 4x4 matrix to store the currect state
+        self.reset()               #< 4x4 matrix to store the correct state
 
     def reset(self, all=True):
         """Reset current state to original"""
-        self.state = self.getOrigin() #< 4x4 matrix to store the currect state
+        self.state = self.getOrigin() #< 4x4 matrix to store the correct state
         self.stateTouched = True
         return self
 
@@ -42,7 +42,8 @@ class Object_base():
             return None
 
     def scale(self, scale: list|tuple|float):
-        """Apply scaling to curent state"""
+        """Apply scaling to current state"""
+        """Apply scaling to current state"""
         if not isinstance(scale, (list, tuple)):
             scale = (scale,)*3
         scaleM = ML.I(4)
@@ -59,19 +60,33 @@ class Object_base():
             for ci, val in enumerate(row):
                 self.state[ri][ci] = val
 
-    def rotate(self, x: float, y: float, z: float, dcm: list=None):
-        """Apply rotation to curent state"""
+    def rotate(self, x: float, y: float, z: float, dcm: list=None, centerAt: list=None):
+        """Apply rotation to current state"""
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
-        self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+        if centerAt == None:
+            #self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+            dcm[0] += [0]
+            dcm[1] += [0]
+            dcm[2] += [0]
+        else:
+            tx, ty, tz = centerAt[0],centerAt[1],centerAt[2]
+            r = dcm
+            dcm[0] += [tx*(1-r[0][0]) -r[0][1]*ty -r[0][2]*tz]
+            dcm[1] += [ty*(1-r[1][1]) -r[1][0]*tx -r[1][2]*tz]
+            dcm[2] += [tz*(1-r[2][2]) -r[2][0]*tx -r[2][1]*ty]
+        dcm += [[0,0,0,1]]
+        self.state = ML.MxM(dcm, self.state)
         self.stateTouched = True
         return self
 
     def translate(self, x, y, z):
-        """Apply translation to curent state"""
-        self.state[0][3] += x
-        self.state[1][3] += y
-        self.state[2][3] += z
+        """Apply translation to current state"""
+        transM = ML.I(4)
+        transM[0][3] += x
+        transM[1][3] += y
+        transM[2][3] += z
+        self.state = ML.MxM(transM, self.state)
         self.stateTouched = True
         return self
 
@@ -81,7 +96,7 @@ class Object_base():
                   translate: list=(0,0,0),
                   transMatrix: list=None
                   ):
-        """Apply transformation to curent state"""
+        """Apply transformation to current state"""
         if transMatrix == None:
             self\
             .scale(scale)\
