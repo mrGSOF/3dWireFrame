@@ -65,21 +65,21 @@ def angle_V2(V) -> float:
 
 def polar_V2(V) -> float:
     """ Return the polar coordinates of 2D vector """
-    return [absV(V), angleV(V)]
+    return [absV(V), angle_V2(V)]
 
 def rotation_V2(rad, V) -> list:
     #sinX = math.sin(rad)
     #cosX = math.cos(rad)
     #DCM = ((cosX, -sinX), (sinX, cosX))
-    return mul_M2x2(DCM_2D(rad), V)
+    return MxV_2x2(DCM_V2(rad), V)
     
 def absV_V3(V) -> float:
     """ Return the magnitude of 2D vector """
     return math.sqrt((V[0]**2) +(V[1]**2) +(V[2]**2))
 
 def angle_V3(v) -> list:
-    r = absV3(v)
-    _absV2 = absV2( v[0:2] )
+    r = absV_V3(v)
+    _absV2 = absV_V2( v[0:2] )
     elevation = pi / 2.0                          #< For case 0 and 1
     #elevation = 0.0                                  #< For case2
     if _absV2 > 0.001:
@@ -90,7 +90,7 @@ def angle_V3(v) -> list:
     return azimuth, elevation, r
 
 def cartesianToPolar_V3(pos):
-    return angleV3(pos)
+    return angle_V3(pos)
 
 def polarToCartesian_V3(azimuth, elevation, distance):
     abs_xy = distance * math.cos(elevation)
