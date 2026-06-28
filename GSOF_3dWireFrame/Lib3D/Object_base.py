@@ -5,11 +5,11 @@ from GSOF_3dWireFrame.Lib3D import Lib3D as L
 class Object_base():
     def __init__(self):
         self.stateOrigin = ML.I(4) #< 4x4 matrix to store the original state of scale, rotation and translations
-        self.reset()               #< 4x4 matrix to store the currect state
+        self.reset()               #< 4x4 matrix to store the correct state
 
     def reset(self, all=True):
         """Reset current state to original"""
-        self.state = self.getOrigin() #< 4x4 matrix to store the currect state
+        self.state = self.getOrigin() #< 4x4 matrix to store the correct state
         self.stateTouched = True
         return self
 
