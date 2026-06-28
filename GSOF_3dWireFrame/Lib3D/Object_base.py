@@ -69,7 +69,7 @@ class Object_base():
             dcm[1] += [0]
             dcm[2] += [0]
         else:
-            tx, tz, tz = -centerAt[0],-centerAt[1],-centerAt[2]
+            tx, ty, tz = -centerAt[0],-centerAt[1],-centerAt[2]
             r = dcm
             dcm[0] += [tx*(1-r[0][0]) -r[0][1]*ty -r[0][2]*tz]
             dcm[1] += [ty*(1-r[1][1]) -r[1][0]*tx -r[1][2]*tz]
