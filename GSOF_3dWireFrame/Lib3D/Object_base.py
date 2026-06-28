@@ -43,6 +43,7 @@ class Object_base():
 
     def scale(self, scale: list|tuple|float):
         """Apply scaling to current state"""
+        """Apply scaling to current state"""
         if not isinstance(scale, (list, tuple)):
             scale = (scale,)*3
         scaleM = ML.I(4)
@@ -63,15 +64,29 @@ class Object_base():
         """Apply rotation to current state"""
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
-        self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+        if centerAt == None:
+            #self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+            dcm[0] += [0]
+            dcm[1] += [0]
+            dcm[2] += [0]
+        else:
+            tx, tz, tz = -centerAt[0],-centerAt[1],-centerAt[2]
+            r = dcm
+            dcm[0] += [tx*(1-r[0][0]) -r[0][1]*ty -r[0][2]*tz]
+            dcm[1] += [ty*(1-r[1][1]) -r[1][0]*tx -r[1][2]*tz]
+            dcm[2] += [tz*(1-r[2][2]) -r[2][0]*tx -r[2][1]*ty]
+        dcm += [[0,0,0,1]]
+        self.state = ML.MxM(dcm, self.state)
         self.stateTouched = True
         return self
 
     def translate(self, x, y, z):
         """Apply translation to current state"""
-        self.state[0][3] += x
-        self.state[1][3] += y
-        self.state[2][3] += z
+        transM = ML.I(4)
+        transM[0][3] += x
+        transM[1][3] += y
+        transM[2][3] += z
+        self.state = ML.MxM(transM, self.state)
         self.stateTouched = True
         return self
 

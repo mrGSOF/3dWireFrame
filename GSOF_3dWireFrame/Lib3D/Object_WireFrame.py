@@ -1,4 +1,3 @@
-from GSOF_3dWireFrame.MathLib import MathLib as ML
 from GSOF_3dWireFrame.Lib3D import Lib3D as L
 from GSOF_3dWireFrame.Lib3D.Object_base import *
 
