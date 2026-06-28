@@ -63,15 +63,22 @@ class Object_base():
         """Apply rotation to curent state"""
         if dcm == None:
             dcm = L.getRotationMatrix(x, y, z)
-        self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+        #self.copyDcmIntoState(ML.MxM(self.state[0:3], dcm))
+        dcm[0] += [0]
+        dcm[1] += [0]
+        dcm[2] += [0]
+        dcm[3] += [0,0,0,1]
+        self.state = ML.MxM(dcm, self.state)
         self.stateTouched = True
         return self
 
     def translate(self, x, y, z):
         """Apply translation to curent state"""
-        self.state[0][3] += x
-        self.state[1][3] += y
-        self.state[2][3] += z
+        transM = ML.I(4)
+        trans[0][3] += x
+        trans[1][3] += y
+        trans[2][3] += z
+        self.state = ML.MxM(transM, self.state)
         self.stateTouched = True
         return self
 
