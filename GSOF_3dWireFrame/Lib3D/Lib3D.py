@@ -113,7 +113,6 @@ def _update(points, transformation) -> list:
     for i, point in enumerate(points):
         if len(point) < 4:
             point += [1] #< Add translation dimension
-        point += [1] #< Add translation dimension
         newPoints[i] = (ML.MxV(transformation, point))[0:3]
     return newPoints
 
